@@ -15,13 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author admin123
+ * @author macbookpro
  */
-public class loginServlet extends HttpServlet {
+public class downloadServlet extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -36,10 +35,10 @@ public class loginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet loginServlet</title>");            
+            out.println("<title>Servlet downloadServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet loginServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet downloadServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -57,7 +56,8 @@ public class loginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+     
+        
     }
 
     /**
@@ -71,24 +71,14 @@ public class loginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String host = request.getParameter("host");
-        int port = Integer.valueOf(request.getParameter("port"));
         
-        FTPService fTPService = new FTPService(host, port, username, password);
         
-           boolean check = fTPService.getConnectionServer();
-           if(check == false){
-               request.setAttribute("message","FTP server not respond!");
-               request.getRequestDispatcher("login.jsp").forward(request, response);
-           }
-           else if (check == true){
-               request.getRequestDispatcher("index.jsp").forward(request, response);
-           }
-        }
+        String path = (String) request.getParameter("pathFile");
+        String fileName = (String) request.getParameter("folderName");
+        String folderSave  = (String) request.getParameter("folderSave");
+        FTPService.dowloadFile(path, fileName, folderSave+"/"+fileName);
+    }
 
-    
     /**
      * Returns a short description of the servlet.
      *

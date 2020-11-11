@@ -59,7 +59,11 @@ public class listFileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-      
+        
+        List<FTPFile> listFile =  FTPService.getListFileFromFTPServer();
+       // List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/download");
+        request.setAttribute("listFile", listFile);
+        request.getRequestDispatcher("listFile.jsp").forward(request, response);
     }
 
     /**
@@ -73,10 +77,7 @@ public class listFileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         String path = request.getParameter("term");
-        List<FTPFile> listFile =  FTPService.getListFileFromFTPServer(path);
-        request.setAttribute("listFile", listFile);
-        request.getRequestDispatcher("listFile.jsp").forward(request, response);
+      
     }
 
     /**

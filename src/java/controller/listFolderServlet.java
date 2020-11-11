@@ -8,20 +8,21 @@ package controller;
 import ftp.FTPService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.net.ftp.FTPFile;
 
 /**
  *
- * @author admin123
+ * @author macbookpro
  */
-public class loginServlet extends HttpServlet {
+public class listFolderServlet extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -36,10 +37,10 @@ public class loginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet loginServlet</title>");            
+            out.println("<title>Servlet listFolderServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet loginServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet listFolderServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -57,7 +58,14 @@ public class loginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+        String path=(String) request.getParameter("fileName");
+        System.out.println(path);
+         List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/"+path);
+       // List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/download");
+        request.setAttribute("listFile", listFile);
+        request.setAttribute("folderName", path); // 'Download'
+        request.getRequestDispatcher("listFile.jsp").forward(request, response);
     }
 
     /**
@@ -71,24 +79,9 @@ public class loginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String host = request.getParameter("host");
-        int port = Integer.valueOf(request.getParameter("port"));
-        
-        FTPService fTPService = new FTPService(host, port, username, password);
-        
-           boolean check = fTPService.getConnectionServer();
-           if(check == false){
-               request.setAttribute("message","FTP server not respond!");
-               request.getRequestDispatcher("login.jsp").forward(request, response);
-           }
-           else if (check == true){
-               request.getRequestDispatcher("index.jsp").forward(request, response);
-           }
-        }
+        processRequest(request, response);
+    }
 
-    
     /**
      * Returns a short description of the servlet.
      *

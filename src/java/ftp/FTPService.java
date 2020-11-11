@@ -5,11 +5,18 @@
  */
 package ftp;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPFileFilter;
 import org.apache.commons.net.ftp.FTPReply;
 
 /**
@@ -19,31 +26,95 @@ import org.apache.commons.net.ftp.FTPReply;
 public class FTPService {
 
   //  private static final String FTP_SERVER_ADDRESS = "192.168.1.127";
-    private static final String FTP_SERVER_ADDRESS = "172.16.0.87";
-    private static final int FTP_SERVER_PORT_NUMBER = 5217;
+    private static String FTP_SERVER_ADDRESS ;
+    private  static int FTP_SERVER_PORT_NUMBER ;
+    private static String FTP_USERNAME ;
+    private static String FTP_PASSWORD;
+
+    public FTPService(String FTP_SERVER_ADDRESS, int FTP_SERVER_PORT_NUMBER, String FTP_USERNAME, String FTP_PASSWORD) {
+        this.FTP_SERVER_ADDRESS = FTP_SERVER_ADDRESS;
+        this.FTP_SERVER_PORT_NUMBER = FTP_SERVER_PORT_NUMBER;
+        this.FTP_USERNAME = FTP_USERNAME;
+        this.FTP_PASSWORD = FTP_PASSWORD;
+    }
+
+
     private static final int FTP_TIMEOUT = 60000;
     private static final int BUFFER_SIZE = 1024 * 1024 * 1;
-    private static final String FTP_USERNAME = "admin";
-    private static final String FTP_PASSWORD = "admin";
+    
     private static final String SLASH = "/";
     private static FTPClient ftpClient;
     
     
+    public static boolean dowloadFile(String path, String fileName, String downloadFilePath) throws IOException{
+        
+//        List<FTPFile> listFiles = new ArrayList<FTPFile>();
+//        // list file ends with "jar"
+//        FTPFile[] ftpFiles = ftpClient.listFiles(path, new FTPFileFilter() {
+//            public boolean accept(FTPFile file) {
+//                return file.getName().equalsIgnoreCase(fileName);
+//               
+//            }
+//
+//        });
+//        if (ftpFiles.length > 0) {
+//                for (FTPFile ftpFile : ftpFiles) {
+//                    // add file to listFiles
+//                    if (ftpFile.isFile()) {
+//                        listFiles.add(ftpFile);
+//                    }
+//                }
+//        }
+        // connect ftp server
+        
+        
+        getConnectionServer();
+        String remoteFile1 = "/download/Spring.jpg";
+        File downloadFile1 = new File("downloadFilePath"+fileName);
+        OutputStream outputStream1 = new BufferedOutputStream(new FileOutputStream(downloadFile1));
+        boolean success = ftpClient.retrieveFile(remoteFile1, outputStream1);
+        outputStream1.close();
+
+        return success;
+        
+    }
+    
+    public static List<FTPFile> getListFileFromFTPServer(){
+    
+        List<FTPFile> listFiles = new ArrayList<FTPFile>();
+        // connect ftp server
+        getConnectionServer();
+        try {
+            FTPFile[] ftpFiles = ftpClient.listFiles();
+           // System.out.println("Dri" + " has " + ftpFiles.length + "  file(s)");
+            if (ftpFiles.length > 0) {
+                for (FTPFile ftpFile : ftpFiles) {
+                        
+                    listFiles.add(ftpFile);
+                        
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            // disconnect ftp server
+            disconnectFTPServer(ftpClient);
+        }
+        return listFiles;
+    }
     public static List<FTPFile> getListFileFromFTPServer(String path){
     
         List<FTPFile> listFiles = new ArrayList<FTPFile>();
         // connect ftp server
-        
         getConnectionServer();
         try {
-            FTPFile[] ftpFiles = ftpClient.listFiles(path);
-            System.out.println(path + " has " + ftpFiles.length + "  file(s)");
+            FTPFile[] ftpFiles = ftpClient.listFiles("/"+ path);
+           // System.out.println("Dri" + " has " + ftpFiles.length + "  file(s)");
             if (ftpFiles.length > 0) {
                 for (FTPFile ftpFile : ftpFiles) {
-                    // add file to listFiles
-                    if (ftpFile.isFile()) {
-                        listFiles.add(ftpFile);
-                    }
+                  
+                    listFiles.add(ftpFile);
+                        
                 }
             }
         } catch (IOException ex) {
@@ -55,6 +126,27 @@ public class FTPService {
         return listFiles;
     }
     
+    private static void printFileDetails(FTPFile[] files) {
+        DateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for (FTPFile file : files) {
+            String details = file.getName();
+            if (file.isDirectory()) {
+                details = "[" + details + "]";
+            }
+            details += "\t\t" + file.getSize();
+            details += "\t\t" + dateFormater.format(file.getTimestamp().getTime());
+ 
+            System.out.println(details);
+        }
+    }
+ 
+    private static void printNames(String files[]) {
+        if (files != null && files.length > 0) {
+            for (String aFile: files) {
+                System.out.println(aFile);
+            }
+        }
+    }
     public static boolean getConnectionServer() {
         ftpClient = new FTPClient();
         try {

@@ -131,12 +131,20 @@ span.psw {
   
   <form action="loginServlet" method="post">
     <div class="container">
+     
+      
+      <label for="host"><b>Host</b></label>
+      <input type="text" placeholder="Enter host" name="host" required>
+      
+      <label for="port"><b>Port</b></label>
+      <input type="text" placeholder="Enter Port" name="port" required>
+      
       <label for="uname"><b>Username</b></label>
       <input type="text" placeholder="Enter Username" name="username" required>
 
       <label for="psw"><b>Password</b></label>
       <input type="password" placeholder="Enter Password" name="password" required>
-        
+      
       <button type="submit">Login</button>
       
     </div>

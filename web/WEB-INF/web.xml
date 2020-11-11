@@ -8,6 +8,14 @@
         <servlet-name>listFileServlet</servlet-name>
         <servlet-class>controller.listFileServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>downloadServlet</servlet-name>
+        <servlet-class>controller.downloadServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>listFolderServlet</servlet-name>
+        <servlet-class>controller.listFolderServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>loginServlet</servlet-name>
         <url-pattern>/loginServlet</url-pattern>
@@ -15,6 +23,14 @@
     <servlet-mapping>
         <servlet-name>listFileServlet</servlet-name>
         <url-pattern>/listFileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>downloadServlet</servlet-name>
+        <url-pattern>/downloadServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>listFolderServlet</servlet-name>
+        <url-pattern>/listFolderServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

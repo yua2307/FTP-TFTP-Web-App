@@ -14,9 +14,7 @@
     <body>
         <h1>Connected To Server </h1>
        
-        <form action="listFileServlet" method="POST">
-            <input type="text" name="term" required="required">
-            <button type="submit"> List File</button
-        </form>
+        
+        <a href="listFileServlet"> List File </a>
     </body>
 </html>
