@@ -1,0 +1,16 @@
+.navbar-brand {
+    position: relative;
+    background: url(../images/logo.png) left no-repeat;
+    width: 100px;
+    left: 15px;
+    background-size: contain;
+}
+.table-striped>tbody>tr:nth-child(odd){
+   background-color: #f5f5f5;
+}
+.w-90 {
+	width: 90px;
+}
+th {
+	text-align: center;
+}

@@ -71,24 +71,34 @@ public class loginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = request.getParameter("username");
+        try {
+            String username = request.getParameter("username");
         String password = request.getParameter("password");
         String host = request.getParameter("host");
         int port = Integer.valueOf(request.getParameter("port"));
         
         FTPService fTPService = new FTPService(host, port, username, password);
         
-           boolean check = fTPService.getConnectionServer();
-           if(check == false){
+           int check = fTPService.getConnectionServer();
+           if(check == 0 || check == -1){
                request.setAttribute("message","FTP server not respond!");
                request.getRequestDispatcher("login.jsp").forward(request, response);
            }
-           else if (check == true){
-               request.getRequestDispatcher("index.jsp").forward(request, response);
+           else if (check == 1){
+               request.setAttribute("message","Username or Password incorrect");
+               request.getRequestDispatcher("login.jsp").forward(request, response);
            }
+           else if(check == 2){
+                request.getRequestDispatcher("listFileServlet").forward(request, response);
+           }
+        
+        } catch (NumberFormatException e) {
+            request.setAttribute("message","Port must be a integer");
+               request.getRequestDispatcher("login.jsp").forward(request, response);
         }
+        
 
-    
+    }
     /**
      * Returns a short description of the servlet.
      *

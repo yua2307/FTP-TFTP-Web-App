@@ -73,10 +73,32 @@ public class downloadServlet extends HttpServlet {
             throws ServletException, IOException {
         
         
-        String path = (String) request.getParameter("pathFile");
-        String fileName = (String) request.getParameter("folderName");
+        String folderName = (String) request.getParameter("folderName");
+        System.out.println("path  " + folderName);
+        String fileName = (String) request.getParameter("fileName");
+        System.out.println("fileName   " + fileName);
         String folderSave  = (String) request.getParameter("folderSave");
-        FTPService.dowloadFile(path, fileName, folderSave+"/"+fileName);
+        System.out.println("folderSave" + folderSave);
+  
+       
+          boolean   check = FTPService.dowloadFile(folderName+"/"+fileName, folderSave+"/"+fileName);
+        
+
+        if(check==true){
+            if(folderName == null){
+                request.setAttribute("message", "Download Sucessfully");
+                request.getRequestDispatcher("listFileServlet").forward(request, response);
+            }
+            else {
+                request.setAttribute("message", "Download Sucessfully");
+                request.setAttribute("folderName",folderName);
+                request.getRequestDispatcher("listFolderServlet").forward(request, response);
+            }
+           
+        }
+        else {
+            request.getRequestDispatcher("403.jsp").forward(request, response);
+        }
     }
 
     /**
