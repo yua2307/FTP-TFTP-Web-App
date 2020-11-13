@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -48,7 +49,49 @@ public class FTPService {
     private static FTPClient ftpClient =getConnectionServer2();
     
     
-    
+    // uploadFile("P:\\FTP-Server\\thang10.xlsx", "thang10.xlsx", "/home/test/");
+    public void uploadFile(String localFileFullName,String fileName, String hostDir) throws Exception{
+        try (InputStream ip = new FileInputStream(new File(localFileFullName))){
+                this.ftpClient.storeFile(hostDir + fileName, ip);}
+    }
+    // localFileFullName = dia chi file may client;
+    // fileName = ten file muon luu tren server;
+    // hostDir = dia chi tren ser ver
+    public void uploadFile2(String localFileFullName,String fileName, String hostDir){
+        try {
+//            File secondLocalFile = new File("C:\\Users\\quang\\Downloads\\Win32CmapTools_v6.04_09-24-19.exe");
+            File secondLocalFile = new File(localFileFullName);
+//            String secondRemoteFile = "/home/test/Win32CmapTools_v6.04_09-24-19.exe";
+            InputStream inputStream = new FileInputStream(secondLocalFile);
+ 
+            System.out.println("Start uploading second file");
+            OutputStream outputStream = ftpClient.storeFileStream(hostDir+fileName);
+            byte[] bytesIn = new byte[4096];
+            int read = 0;
+            long total = 0;
+            long fileLength = secondLocalFile.length();
+            long start = System.currentTimeMillis();
+            while ((read = inputStream.read(bytesIn)) != -1) {
+                total += read; 
+                if ((System.currentTimeMillis()-start>=1000) && (fileLength > 0)){// only if total length is known
+                    System.out.println((int) (total * 100 / fileLength)+"%");
+                    start = System.currentTimeMillis();
+                }
+                outputStream.write(bytesIn, 0, read);
+            }
+            
+            inputStream.close();
+            outputStream.close();
+ 
+            boolean completed = ftpClient.completePendingCommand();
+            if (completed) {
+                System.out.println("The second file is uploaded successfully.");
+            }
+        } catch (Exception ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
+    }
+        
     public static boolean dowloadFile(String filePath, String downloadFilePath) throws IOException{
         
 
