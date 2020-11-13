@@ -16,6 +16,14 @@
         <servlet-name>listFolderServlet</servlet-name>
         <servlet-class>controller.listFolderServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>disconnectServlet</servlet-name>
+        <servlet-class>controller.disconnectServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>newFolderServlet</servlet-name>
+        <servlet-class>controller.newFolderServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>loginServlet</servlet-name>
         <url-pattern>/loginServlet</url-pattern>
@@ -31,6 +39,14 @@
     <servlet-mapping>
         <servlet-name>listFolderServlet</servlet-name>
         <url-pattern>/listFolderServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>disconnectServlet</servlet-name>
+        <url-pattern>/disconnectServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>newFolderServlet</servlet-name>
+        <url-pattern>/newFolderServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

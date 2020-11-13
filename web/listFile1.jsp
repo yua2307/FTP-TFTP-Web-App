@@ -146,8 +146,14 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="header">
-                            <a href="#" class="btn btn-success waves-effect">Make New Folder</a>
+                            <form action="newFolderServlet" method="POST" >
+                                <input type="hidden" name="folderName" value="${folderName}">
+                                <input type="text" placeholder="New Folder Name " name="newFolderName" required="required">
+                                <button type="submit">Create New Folder</button>
+                            </form>
+                            <a style="margin-left:89%" href="disconnectServlet" class="btn btn-success waves-effect">Disconnect</a>
                         </div>
+                    
                         <div class="body table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead class="btn-success">
@@ -211,14 +217,15 @@
                                             </c:when>
                                         </c:choose>
                                     </c:forEach>
+                            
             <h1 style="display:none" id="messagesError">${message}</h1>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- #END# Basic Table -->
+           
             
-        </div>
     </section>
             <script src="<c:url value="https://code.jquery.com/jquery-3.2.1.slim.min.js" />"></script>
             <script src="<c:url value="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" />"></script>

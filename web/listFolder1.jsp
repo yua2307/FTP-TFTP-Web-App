@@ -149,7 +149,15 @@
                         <div class="header">
                             <c:set var="preFolderName" value="${folderName}"/>
                             <c:set var="preFolder" value="${fn:substringBefore(preFolderName,'/')}" />
+                            
                             <a href="listFolderServlet?folderName=${preFolder}" class="btn btn-success waves-effect">Previous Folder</a>
+                             <form style="margin-left:45%" action="newFolderServlet" method="POST" >
+                                  <input type="hidden" name="folderName" value="${folderName}">
+                                <input type="text" placeholder="New Folder Name " name="newFolderName" required="required">
+                                <button type="submit">Create New Folder</button>
+                            </form>
+                            
+                            <a style="margin-left:89%" href="disconnectServlet" class="btn btn-success waves-effect">Disconnect</a>
                         </div>
                         <div class="body table-responsive">
                             <table class="table table-bordered table-striped">
@@ -220,7 +228,10 @@
                                             </c:when>
                                         </c:choose>
                                     </c:forEach>
+            
             <h1 style="display:none" id="messagesError">${message}</h1>
+          
+            
         </div>
     </section>
 
