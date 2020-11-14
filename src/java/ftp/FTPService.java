@@ -47,22 +47,64 @@ public class FTPService {
     private static final String SLASH = "/";
     private static FTPClient ftpClient;
     
-    // uploadFile("P:\\FTP-Server\\thang10.xlsx", "thang10.xlsx", "/home/test/");
-    public void uploadFile(String localFileFullName,String fileName, String hostDir) throws Exception{
-        try (InputStream ip = new FileInputStream(new File(localFileFullName))){
-                this.ftpClient.storeFile(hostDir + fileName, ip);}
-    }
-    // localFileFullName = dia chi file may client;
+//    // uploadFile("P:\\FTP-Server\\thang10.xlsx", "thang10.xlsx", "/home/test/");
+//    public void uploadFile(String localFileFullName,String fileName, String hostDir) throws Exception{
+//        try (InputStream ip = new FileInputStream(new File(localFileFullName))){
+//                this.ftpClient.storeFile(hostDir + fileName, ip);}
+//    }
+//    // localFileFullName = dia chi file may client;
+//    // fileName = ten file muon luu tren server;
+//    // hostDir = dia chi tren ser ver
+//    public void uploadFile2(String localFileFullName,String fileName, String hostDir){
+//        try {
+////            File secondLocalFile = new File("C:\\Users\\quang\\Downloads\\Win32CmapTools_v6.04_09-24-19.exe");
+//            File secondLocalFile = new File(localFileFullName);
+////            String secondRemoteFile = "/home/test/Win32CmapTools_v6.04_09-24-19.exe";
+//            InputStream inputStream = new FileInputStream(secondLocalFile);
+// 
+//            System.out.println("Start uploading second file");
+//            OutputStream outputStream = ftpClient.storeFileStream(hostDir+fileName);
+//            byte[] bytesIn = new byte[4096];
+//            int read = 0;
+//            long total = 0;
+//            long fileLength = secondLocalFile.length();
+//            long start = System.currentTimeMillis();
+//            while ((read = inputStream.read(bytesIn)) != -1) {
+//                total += read; 
+//                if ((System.currentTimeMillis()-start>=1000) && (fileLength > 0)){// only if total length is known
+//                    System.out.println((int) (total * 100 / fileLength)+"%");
+//                    start = System.currentTimeMillis();
+//                }
+//                outputStream.write(bytesIn, 0, read);
+//            }
+//            
+//            inputStream.close();
+//            outputStream.close();
+// 
+//            boolean completed = ftpClient.completePendingCommand();
+//            if (completed) {
+//                System.out.println("The second file is uploaded successfully.");
+//            }
+//        } catch (Exception ex) {
+//            System.out.println("Error: " + ex.getMessage());
+//        }
+//    }
+    
+    
+    // ftpload.uploadFile("P:\\FTP-Server\\thang10.xlsx", "thang10.xlsx", "/home/test/");
+    // dau vao 
+    // localDir = dia chi file may client;
     // fileName = ten file muon luu tren server;
     // hostDir = dia chi tren ser ver
-    public void uploadFile2(String localFileFullName,String fileName, String hostDir){
+public Boolean uploadFile(String localDir,String fileName, String hostDir){
         try {
-//            File secondLocalFile = new File("C:\\Users\\quang\\Downloads\\Win32CmapTools_v6.04_09-24-19.exe");
-            File secondLocalFile = new File(localFileFullName);
-//            String secondRemoteFile = "/home/test/Win32CmapTools_v6.04_09-24-19.exe";
+//          File secondLocalFile = new File("C:\\Users\\quang\\Downloads\\Win32CmapTools_v6.04_09-24-19.exe");
+            File secondLocalFile = new File(localDir);
             InputStream inputStream = new FileInputStream(secondLocalFile);
- 
-            System.out.println("Start uploading second file");
+            System.out.println("Start uploading file");
+            if (fileName.indexOf(".")!=-1){
+                fileName=fileName.substring(0,fileName.indexOf("."));
+            }
             OutputStream outputStream = ftpClient.storeFileStream(hostDir+fileName);
             byte[] bytesIn = new byte[4096];
             int read = 0;
@@ -77,19 +119,84 @@ public class FTPService {
                 }
                 outputStream.write(bytesIn, 0, read);
             }
-            
+//            unZip(hostDir+fileName+".zip", hostDir+fileName);
             inputStream.close();
             outputStream.close();
- 
+            
+            System.out.print(hostDir+fileName+".zip  : :   ");
             boolean completed = ftpClient.completePendingCommand();
             if (completed) {
-                System.out.println("The second file is uploaded successfully.");
+                System.out.println("The file is uploaded successfully.");
             }
+            return true;
         } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
+            return false;
         }
     }
-        
+//ftpload.uploadDirectory("P:\\English\\Buoi 22", "/home/test/", "");
+// dau vao
+// localParentDir = dia chi file may client
+// remoteDirPath = thu muc muon luu
+// remoteParentDir =""
+public Boolean uploadDirectory(String localParentDir, String remoteDirPath, String remoteParentDir)
+        throws IOException {
+    String dir1,dir2;
+    if (localParentDir.indexOf("/")!=-1) dir1= "/"; 
+        else dir1= "\\" ;
+    if (remoteDirPath.indexOf("/")!=-1) dir2= "/"; 
+        else dir2= "\\" ;
+    remoteDirPath = remoteDirPath + dir2 + localParentDir.substring(localParentDir.lastIndexOf(dir1)+1);
+    boolean created = ftpClient.makeDirectory(remoteDirPath);
+    System.out.println("LISTING directory: " + localParentDir);
+    File localDir = new File(localParentDir);
+    File[] subFiles = localDir.listFiles();
+    if (subFiles != null && subFiles.length > 0) {
+        for (File item : subFiles) {
+            String remoteFilePath = remoteDirPath + dir2 + remoteParentDir
+                    + dir2 + item.getName();
+            if (remoteParentDir.equals("")) {
+                remoteFilePath = remoteDirPath + dir2 + item.getName();
+            }
+            if (item.isFile()) {
+                // upload the file
+                String localFilePath = item.getAbsolutePath();
+                System.out.println("About to upload the file: " + localFilePath);
+                boolean uploaded = uploadFile(localFilePath,item.getName(), remoteFilePath);
+                if (uploaded) {
+                    System.out.println("UPLOADED a file to: "
+                            + remoteFilePath);
+                } else {
+                    System.out.println("COULD NOT upload the file: "
+                            + localFilePath);
+                    return false;
+                }
+            } else {
+                // create directory on the server
+                created = ftpClient.makeDirectory(remoteFilePath);
+                if (created) {
+                    System.out.println("CREATED the directory: "
+                            + remoteFilePath);
+                } else {
+                    System.out.println("COULD NOT create the directory: "
+                            + remoteFilePath);
+                    return false;
+                }
+ 
+                // upload the sub directory
+                String parent = remoteParentDir + dir2 + item.getName();
+                if (remoteParentDir.equals("")) {
+                    parent = item.getName();
+                }
+ 
+                localParentDir = item.getAbsolutePath();
+                uploadDirectory( remoteDirPath, localParentDir,
+                        parent);
+            }
+        }
+    }
+    return true;
+}       
     public static boolean dowloadFile(String filePath, String downloadFilePath) throws IOException{
         
 //        List<FTPFile> listFiles = new ArrayList<FTPFile>();
