@@ -59,7 +59,7 @@ public class listFileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        request.getSession().removeAttribute("folderNameUpload");
         List<FTPFile> listFile =  FTPService.getListFileFromFTPServer();
        // List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/download");
         request.setAttribute("listFile", listFile);

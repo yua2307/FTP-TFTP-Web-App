@@ -5,22 +5,18 @@
  */
 package controller;
 
-import ftp.FTPService;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import org.apache.commons.net.ftp.FTPFile;
 
 /**
  *
  * @author macbookpro
  */
-public class listFolderServlet extends HttpServlet {
+public class deleteServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -38,10 +34,10 @@ public class listFolderServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet listFolderServlet</title>");            
+            out.println("<title>Servlet deleteServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet listFolderServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet deleteServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,31 +55,7 @@ public class listFolderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        String folderName=(String) request.getParameter("folderName");
-        String folderNameUpload = (String) request.getSession().getAttribute("folderNameUpload"); 
-        HttpSession session = request.getSession();
-        System.out.println(folderNameUpload);
-        if(folderNameUpload !=null && folderName == null){
-              List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/"+folderNameUpload);
-                // List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/download");
-                 request.setAttribute("listFile", listFile);
-                request.setAttribute("folderName", folderNameUpload); // 'Download'
-             //   session.setAttribute("folderNameUpload", folderName);
-                 request.getRequestDispatcher("listFolder1.jsp").forward(request, response);
-        }
-        else if(folderName == null || folderName.equalsIgnoreCase("")){
-            session.removeAttribute("folderNameUpload");
-            request.getRequestDispatcher("listFileServlet").forward(request, response);
-        }
-        else {
-         List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/"+folderName);
-       // List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/download");
-        request.setAttribute("listFile", listFile);
-        request.setAttribute("folderName", folderName); // 'Download'
-        session.setAttribute("folderNameUpload", folderName);
-        request.getRequestDispatcher("listFolder1.jsp").forward(request, response);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -97,7 +69,7 @@ public class listFolderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response);
+        processRequest(request, response);
     }
 
     /**

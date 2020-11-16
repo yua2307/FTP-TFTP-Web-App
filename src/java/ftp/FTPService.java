@@ -42,22 +42,15 @@ public class FTPService {
     }
 
 
-    private static final int FTP_TIMEOUT = 60000;
+    private static final int FTP_TIMEOUT = 6000000;
     private static final int BUFFER_SIZE = 1024 * 1024 * 1;
     
     private static final String SLASH = "/";
     private static FTPClient ftpClient =getConnectionServer2();
     
     
-    // uploadFile("P:\\FTP-Server\\thang10.xlsx", "thang10.xlsx", "/home/test/");
-    public void uploadFile(String localFileFullName,String fileName, String hostDir) throws Exception{
-        try (InputStream ip = new FileInputStream(new File(localFileFullName))){
-                this.ftpClient.storeFile(hostDir + fileName, ip);}
-    }
-    // localFileFullName = dia chi file may client;
-    // fileName = ten file muon luu tren server;
-    // hostDir = dia chi tren ser ver
-    public void uploadFile2(String localFileFullName,String fileName, String hostDir){
+
+    public static boolean uploadFile(String localFileFullName,String fileName, String hostDir){
         try {
 //            File secondLocalFile = new File("C:\\Users\\quang\\Downloads\\Win32CmapTools_v6.04_09-24-19.exe");
             File secondLocalFile = new File(localFileFullName);
@@ -65,7 +58,8 @@ public class FTPService {
             InputStream inputStream = new FileInputStream(secondLocalFile);
  
             System.out.println("Start uploading second file");
-            OutputStream outputStream = ftpClient.storeFileStream(hostDir+fileName);
+            
+            OutputStream outputStream = ftpClient.storeFileStream("/"+hostDir+"/"+fileName);
             byte[] bytesIn = new byte[4096];
             int read = 0;
             long total = 0;
@@ -86,12 +80,67 @@ public class FTPService {
             boolean completed = ftpClient.completePendingCommand();
             if (completed) {
                 System.out.println("The second file is uploaded successfully.");
+                return true;
             }
         } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
+            return false;
         }
+        return false;
     }
-        
+    
+    public static boolean  deleteFile(String filePath) throws IOException{
+        boolean check  = ftpClient.deleteFile(filePath);
+        showServerReply(ftpClient);
+        return check;
+    }
+    
+    public static boolean deleteFolder( String folderName,String currentDir) throws IOException {
+        String dirToList = folderName;
+        if (!currentDir.equals("")) {
+            dirToList += "/" + currentDir;
+        }
+ 
+        FTPFile[] subFiles = ftpClient.listFiles(dirToList);
+ 
+        if (subFiles != null && subFiles.length > 0) {
+            for (FTPFile aFile : subFiles) {
+                String currentFileName = aFile.getName();
+                if (currentFileName.equals(".") || currentFileName.equals("..")) {
+                    // skip parent directory and the directory itself
+                    continue;
+                }
+                String filePath = folderName + "/" + currentDir + "/"
+                        + currentFileName;
+                if (currentDir.equals("")) {
+                    filePath = folderName + "/" + currentFileName;
+                }
+ 
+                if (aFile.isDirectory()) {
+                    // remove the sub directory
+                    deleteFolder( dirToList, currentFileName);
+                } else {
+                    // delete the file
+                    boolean deleted = ftpClient.deleteFile(filePath);
+                    if (deleted) {
+                        System.out.println("DELETED the file: " + filePath);
+                    } else {
+                        System.out.println("CANNOT delete the file: "
+                                + filePath);
+                    }
+                }
+            }
+ 
+            // finally, remove the directory itself
+            boolean removed = ftpClient.removeDirectory(dirToList);
+            if (removed) {
+               return  true;
+            } else {
+               return false;
+            }
+        }
+        return false;
+    }
     public static boolean dowloadFile(String filePath, String downloadFilePath) throws IOException{
         
 

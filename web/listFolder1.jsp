@@ -147,16 +147,32 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="header">
-                            <c:set var="preFolderName" value="${folderName}"/>
-                            <c:set var="preFolder" value="${fn:substringBefore(preFolderName,'/')}" />
+
+                            <c:set var="folderName" value="${folderName}"/> 
+                            <c:set var="preFolder" value="${fn:substringBefore(folderName,'/')}" />
+                            <c:choose>
+                                <c:when test="${preFolder != ''}">
+                                    <a href="listFolderServlet?folderName=${preFolder}" class="btn btn-success waves-effect">Previous Folder</a>
+                                </c:when>
+                                <c:otherwise >
+                                    <a href="listFileServlet" class="btn btn-success waves-effect">Previous Folder</a>
+                                </c:otherwise>
+                            </c:choose>
                             
-                            <a href="listFolderServlet?folderName=${preFolder}" class="btn btn-success waves-effect">Previous Folder</a>
-                             <form style="margin-left:45%" action="newFolderServlet" method="POST" >
-                                  <input type="hidden" name="folderName" value="${folderName}">
+                             <form style="margin-left:10%" action="newFolderServlet" method="POST" >
+                                 <input type="hidden" name="folderName" value="${folderName}">
                                 <input type="text" placeholder="New Folder Name " name="newFolderName" required="required">
                                 <button type="submit">Create New Folder</button>
                             </form>
-                            
+                             <form style="margin-left: 35%;margin-top: -2%" action="uploadServlet" method="POST" enctype="multipart/form-data"  multiple="multiple">                               
+                                 <label for="myfile">Select a file:</label>
+                                <input type="file" name="fileName" required="required">
+                              
+                                <button type="submit">Upload</button>
+                            </form>
+                                <p>
+                                    Folder Name : ${sessionScope['folderNameUpload']}
+                                </p>    
                             <a style="margin-left:89%" href="disconnectServlet" class="btn btn-success waves-effect">Disconnect</a>
                         </div>
                         <div class="body table-responsive">
@@ -179,7 +195,11 @@
                                                     <td>${file.getName()}</td>
                                                     <td>${file.getSize()}</td>
                                                     <td></td>
-                                                    <td>   <button type="button"style="font-size:24px" data-toggle="modal" data-target="#${file.getName()}"><i class="fa fa-download"></i></button></td>
+                                                    <td>   
+                                                        <button type="button"style="font-size:24px" data-toggle="modal" data-target="#${file.getName()}"><i class="fa fa-download"></i></button>
+                                                        <c:set var="pathFolder" value="${folderName}/${file.getName()}"/>
+                                                        <a href="deleteFile?fileName=${pathFolder}"><button>Delete File</button></a>
+                                                    </td>
                                                 </tr>
                                             </c:when>
                                             <c:when test="${file.isDirectory() == true}">
@@ -188,8 +208,12 @@
                                                     <td>${file.getName()}</td>
                                                     <td></td>
                                                     <td></td>
-                                                     <c:set var="pathFolder" value="${folderName}/${file.getName()}"/>
-                                                     <td><a href="listFolderServlet?folderName=${pathFolder}"><button><i class="material-icons">folder_open</i></button></a></td>
+                                                     
+                                                     <td>
+                                                         <c:set var="pathFolder" value="${folderName}/${file.getName()}"/>
+                                                         <a href="listFolderServlet?folderName=${pathFolder}"><button><i class="material-icons">folder_open</i></button></a>
+                                                         <a href="deleteFolder?folderName=${pathFolder}"><button>Delete Folder</button></a>  
+                                                     </td>
                                                 </tr>
                                             </c:when>
                                         </c:choose>    
@@ -254,12 +278,13 @@
             <script src="<c:url value="/resources/js/admin.js"/>"></script>
             <script src="<c:url value="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"/>"></script>
             <script src="<c:url value="//code.jquery.com/jquery-1.11.1.min.js"/>"></script>
-        <script type="text/javascript">
+         <script type="text/javascript">
               window.onload = function(){ 
                    var avai = document.getElementById("messagesError").textContent;
                    var check1 = avai.localeCompare("Download Sucessfully");
+                   var check2 = avai.localeCompare("Upload Sucessfully");
              
-                   if (check1==0 ) alert(avai); 
+                   if (check1==0 || check2==0) alert(avai); 
                         //alert("${message}");
                }
         </script>

@@ -151,7 +151,13 @@
                                 <input type="text" placeholder="New Folder Name " name="newFolderName" required="required">
                                 <button type="submit">Create New Folder</button>
                             </form>
+                            <form style="margin-left: 35%;margin-top: -2%" action="uploadServlet" method="POST" enctype="multipart/form-data">
+                                <label for="myfile">Select a file:</label>
+                                <input type="file" name="fileName" required="required" multiple="multiple">
+                                <button type="submit">Upload</button>
+                            </form>
                             <a style="margin-left:89%" href="disconnectServlet" class="btn btn-success waves-effect">Disconnect</a>
+
                         </div>
                     
                         <div class="body table-responsive">
@@ -172,9 +178,13 @@
                                                 <tr>
                                                     <td>  <img style="width: 50px;height: 40px" src="<c:url value="/resources/images/file.png"/>"/></td>
                                                     <td>${file.getName()}</td>
-                                                    <td>${file.getSize()}</td>
+                                                    <td>${file.getSize()/1024} MB</td>
                                                     <td></td>
-                                                    <td>   <button type="button"style="font-size:24px" data-toggle="modal" data-target="#${file.getName()}"><i class="fa fa-download"></i></button></td>
+                                                    <td>  
+                                                        <button type="button"style="font-size:24px" data-toggle="modal" data-target="#${file.getName()}"><i class="fa fa-download"></i></button>
+                                                        <c:set var="pathFolder" value="${folderName}/${file.getName()}"/>
+                                                        <a href="deleteFile?fileName=${pathFolder}"><button>Delete File</button></a>
+                                                    </td>
                                                 </tr>
                                             </c:when>
                                             <c:when test="${file.isDirectory() == true}">
@@ -183,7 +193,10 @@
                                                     <td>${file.getName()}</td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td><a href="listFolderServlet?folderName=${file.getName()}"><button><i class="material-icons">folder_open</i></button></a></td>
+                                                    <td>
+                                                        <a href="listFolderServlet?folderName=${file.getName()}"><button><i class="material-icons">folder_open</i></button></a>
+                                                        <a href="deleteFolder?folderName=${file.getName()}"><button>Delete Folder</button></a>
+                                                    </td>
                                                 </tr>
                                             </c:when>
                                         </c:choose>    
@@ -216,8 +229,7 @@
                                                 </div>
                                             </c:when>
                                         </c:choose>
-                                    </c:forEach>
-                            
+                            </c:forEach>
             <h1 style="display:none" id="messagesError">${message}</h1>
                         </div>
                     </div>
@@ -250,8 +262,9 @@
               window.onload = function(){ 
                    var avai = document.getElementById("messagesError").textContent;
                    var check1 = avai.localeCompare("Download Sucessfully");
+                   var check2 = avai.localeCompare("Upload Sucessfully");
              
-                   if (check1==0 ) alert(avai); 
+                   if (check1==0 || check2==0) alert(avai); 
                         //alert("${message}");
                }
         </script>
