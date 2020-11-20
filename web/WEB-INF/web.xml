@@ -74,5 +74,4 @@
             login.jsp
         </welcome-file>
     </welcome-file-list>
-    <welcome-file/>
 </web-app>

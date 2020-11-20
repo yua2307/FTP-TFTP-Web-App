@@ -159,20 +159,18 @@
                                 </c:otherwise>
                             </c:choose>
                             
-                             <form style="margin-left:10%" action="newFolderServlet" method="POST" >
+                             <form style="margin-top:6%" action="newFolderServlet" method="POST" >
                                  <input type="hidden" name="folderName" value="${folderName}">
                                 <input type="text" placeholder="New Folder Name " name="newFolderName" required="required">
                                 <button type="submit">Create New Folder</button>
                             </form>
-                             <form style="margin-left: 35%;margin-top: -2%" action="uploadServlet" method="POST" enctype="multipart/form-data"  multiple="multiple">                               
+                             <form style="margin-left: 39%;margin-top: -3%" action="uploadServlet" method="POST" enctype="multipart/form-data"  multiple="multiple">                               
                                  <label for="myfile">Select a file:</label>
                                 <input type="file" name="fileName" required="required">
                               
                                 <button type="submit">Upload</button>
                             </form>
-                                <p>
-                                    Folder Name : ${sessionScope['folderNameUpload']}
-                                </p>    
+                                 
                             <a style="margin-left:89%" href="disconnectServlet" class="btn btn-success waves-effect">Disconnect</a>
                         </div>
                         <div class="body table-responsive">

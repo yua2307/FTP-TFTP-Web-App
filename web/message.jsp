@@ -14,7 +14,7 @@
         
         
           <p>
-                                    Folder Name : ${sessionScope.folderNameUpload}
+                                 Folder Name : ${sessionScope.folderNameUpload}
           </p>   
           
         
