@@ -76,13 +76,13 @@ public class uploadServlet extends HttpServlet {
 //        System.out.println(folderName);
 //        request.setAttribute("message", "Folder Name :" + folderName + "  message Success");
 //        request.getRequestDispatcher("message.jsp").forward(request, response);
-           
           String folderName = (String) request.getSession().getAttribute("folderNameUpload"); 
           boolean check;
           if(folderName == null || folderName.equalsIgnoreCase("")){
                   check = FTPService.uploadFile(uploadPath+"/"+fileNameForGet, fileNameForGet,"");
           }
           else {
+              System.out.println("Folder Name :" +folderName );
                 check = FTPService.uploadFile(uploadPath+"/"+fileNameForGet, fileNameForGet,folderName);
           }
         
@@ -149,7 +149,7 @@ public class uploadServlet extends HttpServlet {
 		// constructs the directory path to store upload file
 		// this path is relative to application's directory
 		String uploadPath = getServletContext().getRealPath("")
-				+ File.separator + UPLOAD_DIRECTORY;
+				 + UPLOAD_DIRECTORY;
 		
 		// creates the directory if it does not exist
 		File uploadDir = new File(uploadPath);
@@ -169,9 +169,10 @@ public class uploadServlet extends HttpServlet {
 					if (!item.isFormField()) {
                                                 String fileName = new File(item.getName()).getName();
                                                 fileNameForGet = fileName;
+                                                System.out.println("File Name In Netbeans" + fileName);
 						String filePath = uploadPath + File.separator + fileName;
 						File storeFile = new File(filePath);
-
+                                                System.out.println("File Path In Netbeans" + filePath);
 						// saves the file on disk
 						item.write(storeFile);
 						request.setAttribute("message",

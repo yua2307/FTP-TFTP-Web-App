@@ -17,6 +17,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
@@ -41,7 +42,7 @@ public class FTPService {
         this.FTP_PASSWORD = FTP_PASSWORD;
     }
 
-    private static final int FTP_TIMEOUT = 6000000;
+    private static final int FTP_TIMEOUT = Integer.MAX_VALUE;
     private static final int BUFFER_SIZE = 1024 * 1024 * 1;
 
     private static final String SLASH = "/";
@@ -50,24 +51,27 @@ public class FTPService {
     public static boolean uploadFile(String localFileFullName, String fileName, String hostDir) {
         try {
 //            File secondLocalFile = new File("C:\\Users\\quang\\Downloads\\Win32CmapTools_v6.04_09-24-19.exe");
+            
+
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+            System.out.println("FileUpload in netbeans " + localFileFullName);
             File secondLocalFile = new File(localFileFullName);
-//            String secondRemoteFile = "/home/test/Win32CmapTools_v6.04_09-24-19.exe";
-            InputStream inputStream = new FileInputStream(secondLocalFile);
+            FileInputStream inputStream = new FileInputStream(secondLocalFile);
 
             System.out.println("Start uploading second file");
-
-            OutputStream outputStream = ftpClient.storeFileStream("/" + hostDir + "/" + fileName);
+            System.out.println(fileName);
+            OutputStream outputStream = ftpClient.storeFileStream(hostDir+"/"+fileName);
             byte[] bytesIn = new byte[4096];
             int read = 0;
-            long total = 0;
-            long fileLength = secondLocalFile.length();
-            long start = System.currentTimeMillis();
+//            long total = 0;
+//            long fileLength = secondLocalFile.length();
+//            long start = System.currentTimeMillis();
             while ((read = inputStream.read(bytesIn)) != -1) {
-                total += read;
-                if ((System.currentTimeMillis() - start >= 1000) && (fileLength > 0)) {// only if total length is known
-                    System.out.println((int) (total * 100 / fileLength) + "%");
-                    start = System.currentTimeMillis();
-                }
+//                total += read;
+//                if ((System.currentTimeMillis() - start >= 1000) && (fileLength > 0)) {// only if total length is known
+//                    System.out.println((int) (total * 100 / fileLength) + "%");
+//                    start = System.currentTimeMillis();
+//                }
                 outputStream.write(bytesIn, 0, read);
             }
 
@@ -76,11 +80,11 @@ public class FTPService {
 
             boolean completed = ftpClient.completePendingCommand();
             if (completed) {
-                System.out.println("The second file is uploaded successfully.");
+             //   System.out.println("The second file is uploaded successfully.");
                 return true;
             }
         } catch (Exception ex) {
-            System.out.println("Error: " + ex.getMessage());
+           System.out.println("Error: " + ex.getMessage());
             return false;
         }
         return false;
@@ -310,7 +314,7 @@ public class FTPService {
                 //  throw new IOException("FTP server not respond!");
                 return 0;
             } else {
-                ftpClient.setSoTimeout(FTP_TIMEOUT);
+                        ftpClient.setSoTimeout(FTP_TIMEOUT);
                 // login ftp server
                 if (ftpClient.login(FTP_USERNAME, FTP_PASSWORD) == false) {
                     return 1;
