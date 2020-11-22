@@ -90,9 +90,10 @@ public class downloadServlet extends HttpServlet {
                 request.getRequestDispatcher("listFileServlet").forward(request, response);
             }
             else {
-                request.setAttribute("message", "Download Sucessfully");
+                request.getSession().setAttribute("message", "Download Sucessfully");
                 request.setAttribute("folderName",folderName);
-                request.getRequestDispatcher("listFolderServlet").forward(request, response);
+                //request.getRequestDispatcher("listFolderServlet").forward(request, response);
+                response.sendRedirect("listFolderServlet");
             }
            
         }

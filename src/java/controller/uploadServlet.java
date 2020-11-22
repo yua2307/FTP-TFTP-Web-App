@@ -90,14 +90,16 @@ public class uploadServlet extends HttpServlet {
             if(folderName == null || folderName.equalsIgnoreCase("")){
                 System.out.println("at1");
                 request.setAttribute("message", "Upload Sucessfully");
-                request.getRequestDispatcher("listFileServlet").forward(request, response);
+             //   request.getRequestDispatcher("listFileServlet").forward(request, response);
+                response.sendRedirect("listFileServlet");
             }
             else {
                 System.out.println("at2");
                 System.out.println(folderName);
-                request.setAttribute("message", "Upload Sucessfully");
+                request.getSession().setAttribute("message", "Upload Sucessfully");
                 request.setAttribute("folderName",folderName);
-                request.getRequestDispatcher("listFolderServlet").forward(request, response);
+               // request.getRequestDispatcher("listFolderServlet").forward(request, response);
+                response.sendRedirect("listFolderServlet");
             }
         }
         else {

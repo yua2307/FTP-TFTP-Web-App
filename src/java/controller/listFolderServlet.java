@@ -71,10 +71,13 @@ public class listFolderServlet extends HttpServlet {
                 request.setAttribute("folderName", folderNameUpload); // 'Download'
              //   session.setAttribute("folderNameUpload", folderName);
                  request.getRequestDispatcher("listFolder1.jsp").forward(request, response);
+                 request.getSession().removeAttribute("message");
         }
         else if(folderName == null || folderName.equalsIgnoreCase("")){
             session.removeAttribute("folderNameUpload");
-            request.getRequestDispatcher("listFileServlet").forward(request, response);
+          //  request.getRequestDispatcher("listFileServlet").forward(request, response);
+            response.sendRedirect("listFileServlet");
+             
         }
         else {
          List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/"+folderName);
@@ -83,6 +86,7 @@ public class listFolderServlet extends HttpServlet {
         request.setAttribute("folderName", folderName); // 'Download'
         session.setAttribute("folderNameUpload", folderName);
         request.getRequestDispatcher("listFolder1.jsp").forward(request, response);
+         request.getSession().removeAttribute("message");
         }
     }
 

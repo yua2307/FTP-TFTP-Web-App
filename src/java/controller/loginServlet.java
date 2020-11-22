@@ -81,19 +81,20 @@ public class loginServlet extends HttpServlet {
         
            int check = fTPService.getConnectionServer();
            if(check == 0 || check == -1){
-               request.setAttribute("message","FTP server not respond!");
+               request.setAttribute("messageLogin","FTP server not respond!");
                request.getRequestDispatcher("login.jsp").forward(request, response);
            }
            else if (check == 1){
-               request.setAttribute("message","Username or Password incorrect");
+               request.setAttribute("messageLogin","Username or Password incorrect");
                request.getRequestDispatcher("login.jsp").forward(request, response);
            }
            else if(check == 2){
-                request.getRequestDispatcher("listFileServlet").forward(request, response);
+             //  request.getRequestDispatcher("listFileServlet").forward(request, response);
+                response.sendRedirect("listFileServlet");
            }
         
         } catch (NumberFormatException e) {
-            request.setAttribute("message","Port must be a integer");
+            request.setAttribute("messageLogin","Port must be a integer");
                request.getRequestDispatcher("login.jsp").forward(request, response);
         }
         

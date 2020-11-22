@@ -58,7 +58,8 @@ public class disconnectServlet extends HttpServlet {
             throws ServletException, IOException {
         
         FTPService.disconnectFTPServer();
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        request.getSession().removeAttribute("message");
+        response.sendRedirect("login.jsp");
     }
 
     /**

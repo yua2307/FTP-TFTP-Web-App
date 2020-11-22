@@ -90,7 +90,7 @@
                 <ul class="list">
                     <li class="header">MENU</li>
                     <li>
-                        <a href="index.html">
+                        <a href="listFileServlet">
                             <span>Home</span>
                         </a>
                     </li>
@@ -251,7 +251,7 @@
                                         </c:choose>
                                     </c:forEach>
             
-            <h1 style="display:none" id="messagesError">${message}</h1>
+            <h1 style="display:none" id="messagesError">${sessionScope.message}</h1>
           
             
         </div>
