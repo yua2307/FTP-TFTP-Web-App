@@ -48,7 +48,7 @@ public class FTPService {
     private static final String SLASH = "/";
     private static FTPClient ftpClient = getConnectionServer2();
 
-    public static boolean uploadFile(String localFileFullName, String fileName, String hostDir) {
+    public static int uploadFile(String localFileFullName, String fileName, String hostDir) {
         try {
 //            File secondLocalFile = new File("C:\\Users\\quang\\Downloads\\Win32CmapTools_v6.04_09-24-19.exe");
             
@@ -81,13 +81,14 @@ public class FTPService {
             boolean completed = ftpClient.completePendingCommand();
             if (completed) {
              //   System.out.println("The second file is uploaded successfully.");
-                return true;
+                return 1;
             }
         } catch (Exception ex) {
-           System.out.println("Error: " + ex.getMessage());
-            return false;
+            showServerReply(ftpClient);
+           //System.out.println("Error: " + ex.getMessage());
+           return ftpClient.getReplyCode();
         }
-        return false;
+        return -1;
     }
 //ftpload.uploadDirectory("P:\\English\\Buoi 22", "/home/test/", "");
 // dau vao
@@ -95,70 +96,70 @@ public class FTPService {
 // remoteDirPath = thu muc muon luu
 // remoteParentDir =""
 
-    public Boolean uploadDirectory(String localParentDir, String remoteDirPath, String remoteParentDir)
-            throws IOException {
-        String dir1, dir2;
-        if (localParentDir.indexOf("/") != -1) {
-            dir1 = "/";
-        } else {
-            dir1 = "\\";
-        }
-        if (remoteDirPath.indexOf("/") != -1) {
-            dir2 = "/";
-        } else {
-            dir2 = "\\";
-        }
-        remoteDirPath = remoteDirPath + dir2 + localParentDir.substring(localParentDir.lastIndexOf(dir1) + 1);
-        boolean created = ftpClient.makeDirectory(remoteDirPath);
-        System.out.println("LISTING directory: " + localParentDir);
-        File localDir = new File(localParentDir);
-        File[] subFiles = localDir.listFiles();
-        if (subFiles != null && subFiles.length > 0) {
-            for (File item : subFiles) {
-                String remoteFilePath = remoteDirPath + dir2 + remoteParentDir
-                        + dir2 + item.getName();
-                if (remoteParentDir.equals("")) {
-                    remoteFilePath = remoteDirPath + dir2 + item.getName();
-                }
-                if (item.isFile()) {
-                    // upload the file
-                    String localFilePath = item.getAbsolutePath();
-                    System.out.println("About to upload the file: " + localFilePath);
-                    boolean uploaded = uploadFile(localFilePath, item.getName(), remoteFilePath);
-                    if (uploaded) {
-                        System.out.println("UPLOADED a file to: "
-                                + remoteFilePath);
-                    } else {
-                        System.out.println("COULD NOT upload the file: "
-                                + localFilePath);
-                        return false;
-                    }
-                } else {
-                    // create directory on the server
-                    created = ftpClient.makeDirectory(remoteFilePath);
-                    if (created) {
-                        System.out.println("CREATED the directory: "
-                                + remoteFilePath);
-                    } else {
-                        System.out.println("COULD NOT create the directory: "
-                                + remoteFilePath);
-                        return false;
-                    }
-
-                    // upload the sub directory
-                    String parent = remoteParentDir + dir2 + item.getName();
-                    if (remoteParentDir.equals("")) {
-                        parent = item.getName();
-                    }
-
-                    localParentDir = item.getAbsolutePath();
-                    uploadDirectory(remoteDirPath, localParentDir,
-                            parent);
-                }
-            }
-        }
-        return true;
-    }
+//    public Boolean uploadDirectory(String localParentDir, String remoteDirPath, String remoteParentDir)
+//            throws IOException {
+//        String dir1, dir2;
+//        if (localParentDir.indexOf("/") != -1) {
+//            dir1 = "/";
+//        } else {
+//            dir1 = "\\";
+//        }
+//        if (remoteDirPath.indexOf("/") != -1) {
+//            dir2 = "/";
+//        } else {
+//            dir2 = "\\";
+//        }
+//        remoteDirPath = remoteDirPath + dir2 + localParentDir.substring(localParentDir.lastIndexOf(dir1) + 1);
+//        boolean created = ftpClient.makeDirectory(remoteDirPath);
+//        System.out.println("LISTING directory: " + localParentDir);
+//        File localDir = new File(localParentDir);
+//        File[] subFiles = localDir.listFiles();
+//        if (subFiles != null && subFiles.length > 0) {
+//            for (File item : subFiles) {
+//                String remoteFilePath = remoteDirPath + dir2 + remoteParentDir
+//                        + dir2 + item.getName();
+//                if (remoteParentDir.equals("")) {
+//                    remoteFilePath = remoteDirPath + dir2 + item.getName();
+//                }
+//                if (item.isFile()) {
+//                    // upload the file
+//                    String localFilePath = item.getAbsolutePath();
+//                    System.out.println("About to upload the file: " + localFilePath);
+//                .    boolean uploaded = uploadFile(localFilePath, item.getName(), remoteFilePath);
+//                    if (uploaded) {
+//                        System.out.println("UPLOADED a file to: "
+//                                + remoteFilePath);
+//                    } else {
+//                        System.out.println("COULD NOT upload the file: "
+//                                + localFilePath);
+//                        return false;
+//                    }
+//                } else {
+//                    // create directory on the server
+//                    created = ftpClient.makeDirectory(remoteFilePath);
+//                    if (created) {
+//                        System.out.println("CREATED the directory: "
+//                                + remoteFilePath);
+//                    } else {
+//                        System.out.println("COULD NOT create the directory: "
+//                                + remoteFilePath);
+//                        return false;
+//                    }
+//
+//                    // upload the sub directory
+//                    String parent = remoteParentDir + dir2 + item.getName();
+//                    if (remoteParentDir.equals("")) {
+//                        parent = item.getName();
+//                    }
+//
+//                    localParentDir = item.getAbsolutePath();
+//                    uploadDirectory(remoteDirPath, localParentDir,
+//                            parent);
+//                }
+//            }
+//        }
+//        return true;
+//    }
 
     public static boolean deleteFile(String filePath) throws IOException {
         boolean check = ftpClient.deleteFile(filePath);

@@ -77,7 +77,7 @@ public class uploadServlet extends HttpServlet {
 //        request.setAttribute("message", "Folder Name :" + folderName + "  message Success");
 //        request.getRequestDispatcher("message.jsp").forward(request, response);
           String folderName = (String) request.getSession().getAttribute("folderNameUpload"); 
-          boolean check;
+          int check;
           if(folderName == null || folderName.equalsIgnoreCase("")){
                   check = FTPService.uploadFile(uploadPath+"/"+fileNameForGet, fileNameForGet,"");
           }
@@ -86,7 +86,7 @@ public class uploadServlet extends HttpServlet {
                 check = FTPService.uploadFile(uploadPath+"/"+fileNameForGet, fileNameForGet,folderName);
           }
         
-         if(check==true){
+         if(check==1){
             if(folderName == null || folderName.equalsIgnoreCase("")){
                 System.out.println("at1");
                 request.setAttribute("message", "Upload Sucessfully");
@@ -102,6 +102,10 @@ public class uploadServlet extends HttpServlet {
                 response.sendRedirect("listFolderServlet");
             }
         }
+         else if (check == 553){
+             request.getSession().setAttribute("message", "Sorry. You don't have permission to upload at here ");
+              response.sendRedirect("listFolderServlet");
+         }
         else {
             request.getRequestDispatcher("403.jsp").forward(request, response);
         }
