@@ -25,6 +25,11 @@ public class TFTPService {
         this.TFTP_SERVER_PORT_NUMBER = TFTP_SERVER_PORT_NUMBER;
     }
 
+    public TFTPService(String TFTP_SERVER_ADDRESS) {
+         this.TFTP_SERVER_ADDRESS = TFTP_SERVER_ADDRESS;
+    }
+
+    
     private static final TFTPClient tftpClient = getConnection2(TFTP_SERVER_PORT_NUMBER);
 
     private static final int transferMode = TFTP.BINARY_MODE;
@@ -32,12 +37,12 @@ public class TFTPService {
     private static final int timeOut = Integer.MAX_VALUE;
     private static boolean verbose = false;
 
-    private static boolean getConnection(String hostName, int port) {
+    private static boolean getConnection(String hostName) {
         try {
-            TFTPService tftpService = new TFTPService(hostName, port);
+            TFTPService tftpService = new TFTPService(hostName);
             TFTPClient tftp = new TFTPClient();
             tftp.setDefaultTimeout(timeOut);
-            tftp.open(port);
+            tftp.open();
             return true;
         } catch (Exception e) {
             System.out.println("Error : " + e.getMessage());
