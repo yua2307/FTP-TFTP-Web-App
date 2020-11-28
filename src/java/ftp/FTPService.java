@@ -168,11 +168,13 @@ public class FTPService {
     }
 
     public static boolean deleteFolder(String folderName, String currentDir) throws IOException {
+        
+        
         String dirToList = folderName;
         if (!currentDir.equals("")) {
             dirToList += "/" + currentDir;
         }
-
+        System.out.println(dirToList);
         FTPFile[] subFiles = ftpClient.listFiles(dirToList);
 
         if (subFiles != null && subFiles.length > 0) {

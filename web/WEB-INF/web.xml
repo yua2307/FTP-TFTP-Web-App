@@ -32,6 +32,10 @@
         <servlet-name>uploadServlet</servlet-name>
         <servlet-class>controller.uploadServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>deleteFolderServlet</servlet-name>
+        <servlet-class>controller.deleteFolderServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>loginServlet</servlet-name>
         <url-pattern>/loginServlet</url-pattern>
@@ -63,6 +67,10 @@
     <servlet-mapping>
         <servlet-name>uploadServlet</servlet-name>
         <url-pattern>/uploadServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>deleteFolderServlet</servlet-name>
+        <url-pattern>/deleteFolderServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

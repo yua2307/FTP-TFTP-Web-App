@@ -183,7 +183,7 @@
                                                     <td>  
                                                         <button type="button"style="font-size:24px" data-toggle="modal" data-target="#${file.getName()}"><i class="fa fa-download"></i></button>
                                                         <c:set var="pathFolder" value="${folderName}/${file.getName()}"/>
-                                                        <a href="deleteFile?fileName=${pathFolder}"><button>Delete File</button></a>
+                                                        <a href="deleteServlet?fileName=${file.getName()}"><button>Delete File</button></a>
                                                     </td>
                                                 </tr>
                                             </c:when>
@@ -195,7 +195,7 @@
                                                     <td></td>
                                                     <td>
                                                         <a href="listFolderServlet?folderName=${file.getName()}"><button><i class="material-icons">folder_open</i></button></a>
-                                                        <a href="deleteFolder?folderName=${file.getName()}"><button>Delete Folder</button></a>
+                                                        <a href="deleteFolderServlet?folderName=null&fileName=${file.getName()}"><button>Delete Folder</button></a>
                                                     </td>
                                                 </tr>
                                             </c:when>
@@ -264,8 +264,9 @@
                    var check1 = avai.localeCompare("Download Sucessfully");
                    var check2 = avai.localeCompare("Upload Sucessfully");
                    var check3 = avai.localeCompare("Sorry. You don't have permission to upload at here ");
+                   var check4 = avai.localeCompare("Delete Sucessfully");
              
-                   if (check1==0 || check2==0|| check3 == 0) alert(avai); 
+                   if (check1==0 || check2==0|| check3 == 0 || check4 == 0) alert(avai); 
                         //alert("${message}");
                }
         </script>

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author macbookpro
  */
-public class deleteServlet extends HttpServlet {
+public class deleteFolderServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +35,10 @@ public class deleteServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet deleteServlet</title>");            
+            out.println("<title>Servlet deleteFolderServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet deleteServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet deleteFolderServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -56,9 +56,19 @@ public class deleteServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String filePath = request.getParameter("fileName");
-        boolean check = FTPService.deleteFile(filePath);
-        String folderPath = (String) request.getSession().getAttribute("folderNameUpload");
+        String pathFolder = (String) request.getParameter("folderName");
+        String folderName = (String) request.getParameter("fileName");
+              
+         String folderPath = (String) request.getSession().getAttribute("folderNameUpload");
+        boolean check = false;
+        
+        if(pathFolder.equalsIgnoreCase("null")){
+            check  = FTPService.deleteFolder( folderName,"");
+        }else {
+             check  = FTPService.deleteFolder(folderName,pathFolder);
+        }
+        
+  
 
         if (check) {
             
