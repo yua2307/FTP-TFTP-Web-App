@@ -225,6 +225,7 @@ public class FTPService {
         if (filePath.startsWith(SLASH)) {
             filePath = filePath.substring(1, filePath.length());
         } else {
+            
             filePath = "/" + filePath;
         }
         //   System.out.println("File PAth in server After Edit : " + filePath);
@@ -242,8 +243,7 @@ public class FTPService {
 
         return success;
 
-    }
-
+    }       
     public static List<FTPFile> getListFileFromFTPServer() {
 
         List<FTPFile> listFiles = new ArrayList<FTPFile>();

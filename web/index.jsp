@@ -12,9 +12,13 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Connected To Server </h1>
+        <h1>Welcome to our application </h1>
        
         
-        <a href="listFileServlet"> List File </a>
+        <a href="login.jsp"> FTP Server </a>
+        
+        <br>
+        <br>
+        <a href="TFTPService.jsp"> TFTP Server </a>
     </body>
 </html>

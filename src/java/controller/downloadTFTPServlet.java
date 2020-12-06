@@ -5,19 +5,24 @@
  */
 package controller;
 
-import ftp.FTPService;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.net.tftp.TFTP;
+import tftp.TFTPService;
 
 /**
  *
  * @author macbookpro
  */
-public class deleteFolderServlet extends HttpServlet {
+public class downloadTFTPServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +40,10 @@ public class deleteFolderServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet deleteFolderServlet</title>");            
+            out.println("<title>Servlet downloadTFTPServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet deleteFolderServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet downloadTFTPServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -56,36 +61,7 @@ public class deleteFolderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String pathFolder = request.getParameter("folderName");
-        String folderName = request.getParameter("fileName");
-              
-         String folderPath = (String) request.getSession().getAttribute("folderNameUpload");
-        boolean check = false;
-        
-        if(pathFolder.equalsIgnoreCase("null")){
-            check  = FTPService.deleteFolder( folderName,"");
-        }else {
-             check  = FTPService.deleteFolder(folderName,pathFolder);
-        }
-        
-  
-
-        if (check) {
-            
-              request.getSession().setAttribute("message", "Delete Sucessfully");
-            if (folderPath == null || folderPath.equalsIgnoreCase("")) {
-
-                //   request.getRequestDispatcher("listFileServlet").forward(request, response);
-                response.sendRedirect("listFileServlet");
-            } else {
-                request.setAttribute("folderName", folderPath);
-                //request.getRequestDispatcher("listFolderServlet").forward(request, response);
-                response.sendRedirect("listFolderServlet");
-            }
-        }
-        else {
-            response.sendRedirect("403.jsp");
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -99,7 +75,45 @@ public class deleteFolderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+         String hostname = (String) request.getParameter("hostname");
+         System.out.println(hostname);
+         request.getSession().setAttribute("hostname", hostname);
+         String fileName = (String) request.getParameter("fileName"); // file Name In Server
+                System.out.println(fileName);
+         String downloadFolder = (String) request.getParameter("downloadFolder"); // folder save in client
+              request.getSession().setAttribute("downloadFolder", downloadFolder);
+                 System.out.println(downloadFolder);
+                 
+                 
+         String pathDownload = downloadFolder+"/" + fileName;        
+         try {
+          
+             
+             int check = TFTPService.receive(TFTP.BINARY_MODE, hostname, pathDownload,fileName );
+        }
+         catch(UnknownHostException e) {    
+            request.setAttribute("messageError", "Wrong host name");
+            request.getRequestDispatcher("TFTPService.jsp").forward(request, response);
+        } 
+         catch ( FileNotFoundException e) {
+            request.setAttribute("messageError", "Wrong File Direction");
+            request.getRequestDispatcher("TFTPService.jsp").forward(request, response);
+        }catch (IOException e){
+            
+            if(e.getMessage().equals("Connection timed out.")){
+                request.setAttribute("messageError", "Wrong host name");
+              request.getRequestDispatcher("TFTPService.jsp").forward(request, response);
+            }else {
+                 request.setAttribute("messageError", "No File Name In Server");
+              request.getRequestDispatcher("TFTPService.jsp").forward(request, response);
+            }
+              
+        }
+         
+         
+            request.setAttribute("messageError", "Download Successfully");
+            request.getRequestDispatcher("TFTPService.jsp").forward(request, response);
+
     }
 
     /**

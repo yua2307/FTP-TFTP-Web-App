@@ -36,6 +36,14 @@
         <servlet-name>deleteFolderServlet</servlet-name>
         <servlet-class>controller.deleteFolderServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>downloadTFTPServlet</servlet-name>
+        <servlet-class>controller.downloadTFTPServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>upoadTFTPServlet</servlet-name>
+        <servlet-class>controller.upoadTFTPServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>loginServlet</servlet-name>
         <url-pattern>/loginServlet</url-pattern>
@@ -72,6 +80,14 @@
         <servlet-name>deleteFolderServlet</servlet-name>
         <url-pattern>/deleteFolderServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>downloadTFTPServlet</servlet-name>
+        <url-pattern>/downloadTFTPServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>upoadTFTPServlet</servlet-name>
+        <url-pattern>/upoadTFTPServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
@@ -79,7 +95,7 @@
     </session-config>
     <welcome-file-list>
         <welcome-file>
-            login.jsp
+            index.jsp
         </welcome-file>
     </welcome-file-list>
 </web-app>

@@ -265,8 +265,9 @@
                    var check2 = avai.localeCompare("Upload Sucessfully");
                    var check3 = avai.localeCompare("Sorry. You don't have permission to upload at here ");
                    var check4 = avai.localeCompare("Delete Sucessfully");
+                   var check5 = avai.localeCompare("File Download Path Not Correct");
              
-                   if (check1==0 || check2==0|| check3 == 0 || check4 == 0) alert(avai); 
+                   if (check1==0 || check2==0|| check3 == 0 || check4 == 0 || check5 == 0) alert(avai); 
                         //alert("${message}");
                }
         </script>

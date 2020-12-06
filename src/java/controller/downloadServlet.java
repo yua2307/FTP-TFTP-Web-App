@@ -35,7 +35,7 @@ public class downloadServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet downloadServlet</title>");            
+            out.println("<title>Servlet downloadServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet downloadServlet at " + request.getContextPath() + "</h1>");
@@ -56,8 +56,7 @@ public class downloadServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-     
-        
+
     }
 
     /**
@@ -72,43 +71,65 @@ public class downloadServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        
         String folderName = (String) request.getParameter("folderName");
         System.out.println("path  " + folderName);
         String fileName = (String) request.getParameter("fileName");
         System.out.println("fileName   " + fileName);
-        String folderSave  = (String) request.getParameter("folderSave");
+        String folderSave = (String) request.getParameter("folderSave");
         System.out.println("folderSave" + folderSave);
-  
-       
-          boolean   check = FTPService.dowloadFile(folderName+"/"+fileName, folderSave+"/"+fileName);
+        try {
+            
+        boolean check = false;
+        try {
+            check = FTPService.dowloadFile(folderName + "/" + fileName, folderSave + "/" + fileName);
+        } catch (Exception e){
+          
+         if (folderName == null) {
+            request.getSession().setAttribute("message", "File Download Path Not Correct");
+           request.getRequestDispatcher("listFileServlet").forward(request, response);
+        } else {
+            request.getSession().setAttribute("message", "File Download Path Not Correct");
+            request.setAttribute("folderName", folderName);
+            //request.getRequestDispatcher("listFolderServlet").forward(request, response);
+            request.getRequestDispatcher("listFolderServlet").forward(request, response);
+        }
+        }
+
+    if(check  ==true){
+            if (folderName == null) {
+            request.setAttribute("message", "Download Sucessfully");
+            request.getRequestDispatcher("listFileServlet").forward(request, response);
+        } else {
+            request.getSession().setAttribute("message", "Download Sucessfully");
+            request.setAttribute("folderName", folderName);
+            //request.getRequestDispatcher("listFolderServlet").forward(request, response);
+              request.getRequestDispatcher("listFolderServlet").forward(request, response);
+        }
+
+    }
+        } catch (NullPointerException ex) {
+             if (folderName == null) {
+            request.getSession().setAttribute("message", "File Download Path Not Correct");
+           request.getRequestDispatcher("listFileServlet").forward(request, response);
+        } else {
+            request.getSession().setAttribute("message", "File Download Path Not Correct");
+            request.setAttribute("folderName", folderName);
+            //request.getRequestDispatcher("listFolderServlet").forward(request, response);
+            request.getRequestDispatcher("listFolderServlet").forward(request, response);
+        }
+            
+        }
         
 
-        if(check==true){
-            if(folderName == null){
-                request.setAttribute("message", "Download Sucessfully");
-                request.getRequestDispatcher("listFileServlet").forward(request, response);
-            }
-            else {
-                request.getSession().setAttribute("message", "Download Sucessfully");
-                request.setAttribute("folderName",folderName);
-                //request.getRequestDispatcher("listFolderServlet").forward(request, response);
-                response.sendRedirect("listFolderServlet");
-            }
-           
-        }
-        else {
-            request.getRequestDispatcher("403.jsp").forward(request, response);
-        }
-    }
+}
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
+/**
+ * Returns a short description of the servlet.
+ *
+ * @return a String containing servlet description
+ */
+@Override
+        public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 

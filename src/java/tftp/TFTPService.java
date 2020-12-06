@@ -1,107 +1,51 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package tftp;
 
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import org.apache.commons.net.tftp.TFTP;
 import org.apache.commons.net.tftp.TFTPClient;
-import org.apache.commons.net.tftp.TFTPPacket;
 
+/**
+ *
+ * @author macbookpro
+ */
 public class TFTPService {
-     
-     private static String TFTP_SERVER_ADDRESS;
 
-    private static int TFTP_SERVER_PORT_NUMBER;
-
-    public TFTPService(String TFTP_SERVER_ADDRESS, int TFTP_SERVER_PORT_NUMBER) {
-        this.TFTP_SERVER_ADDRESS = TFTP_SERVER_ADDRESS;
-        this.TFTP_SERVER_PORT_NUMBER = TFTP_SERVER_PORT_NUMBER;
-    }
-
-    public TFTPService(String TFTP_SERVER_ADDRESS) {
-         this.TFTP_SERVER_ADDRESS = TFTP_SERVER_ADDRESS;
-    }
-
-    
-    private static final TFTPClient tftpClient = getConnection2(TFTP_SERVER_PORT_NUMBER);
-
-    private static final int transferMode = TFTP.BINARY_MODE;
-
-    private static final int timeOut = Integer.MAX_VALUE;
-    private static boolean verbose = false;
-
-    private static boolean getConnection(String hostName) {
-        try {
-            TFTPService tftpService = new TFTPService(hostName);
-            TFTPClient tftp = new TFTPClient();
-            tftp.setDefaultTimeout(timeOut);
-            tftp.open();
-            return true;
-        } catch (Exception e) {
-            System.out.println("Error : " + e.getMessage());
-            return false;
-        }
-    }
-
-    private static TFTPClient getConnection2(int port) {
-        try {
-            // TFTPService tftpService = new TFTPService(hostName, port);
-            TFTPClient tftp = new TFTPClient();
-            tftp.setDefaultTimeout(timeOut);
-            tftp.open(port);
-            return tftp;
-        } catch (Exception e) {
-            System.out.println("Error : " + e.getMessage());
-        }
-        return null;
-
-    }
-
-    public static boolean send(String localFilename, String remoteFilename) {
-
-        boolean closed;
-        FileInputStream input = null;
-        try {
-
-            input = new FileInputStream(localFilename);
-            tftpClient.sendFile(remoteFilename, transferMode, input, TFTP_SERVER_ADDRESS, TFTP_SERVER_PORT_NUMBER);
-
-        } catch (Exception e) {
-            System.out.println("Error : " + e.getMessage());
-        } finally {
-
-            closed = close(tftpClient, input);
-        }
-        return closed;
-
-    }
-
-    public static boolean receive(String localFilename, String remoteFilename) {
-
-        boolean closed;
+       public static int receive(final int transferMode, final String hostname, final String localFilename,
+            final String remoteFilename) throws FileNotFoundException, SocketException, UnknownHostException, IOException {
         OutputStream output = null;
-        File file = new File(localFilename);
-        try {
-            FileOutputStream fileOut = new FileOutputStream(file);
+        File file;
 
-            output = new BufferedOutputStream(fileOut);
-            tftpClient.receiveFile(remoteFilename, transferMode, output, TFTP_SERVER_ADDRESS, TFTP_SERVER_PORT_NUMBER);
-        } catch (Exception e) {
-            System.out.println("Error : " + e.getMessage());
-        } finally {
-            closed = close(tftpClient, output);
-        }
-        return closed;
+        file = new File(localFilename);
+       
+        // Try to open local file for writing
+        output = new BufferedOutputStream(new FileOutputStream(file));
+        TFTPClient tftp = new TFTPClient();
+        tftp.setDefaultTimeout(6000);
+        
+        tftp.open();
+
+        int check = tftp.receiveFile(remoteFilename, transferMode, output, InetAddress.getByName(hostname));
+        close(tftp, output);
+        return check;
+
     }
 
-    public static boolean close(final TFTPClient tftp, final Closeable output) {
+    private static boolean close(final TFTPClient tftp, final Closeable output) {
         boolean closed;
         tftp.close();
         try {
@@ -116,22 +60,20 @@ public class TFTPService {
         }
         return closed;
     }
+    
+    
+    public static void send (final int transferMode, final String hostname, final String localFilename,
+            final String remoteFilename) throws FileNotFoundException, SocketException, IOException{
+       
+       
+       FileInputStream input = new FileInputStream(new File(localFilename));
+       TFTPClient tftp = new TFTPClient();
+        tftp.setDefaultTimeout(600);
+       tftp.open();
+       tftp.sendFile(remoteFilename, transferMode, input, hostname);
+       tftp.close();
+       
+       
+   }
 
-    public String getTFTP_SERVER_ADDRESS() {
-        return TFTP_SERVER_ADDRESS;
-    }
-
-    public void setTFTP_SERVER_ADDRESS(String TFTP_SERVER_ADDRESS) {
-        this.TFTP_SERVER_ADDRESS = TFTP_SERVER_ADDRESS;
-    }
-
-    public int getTFTP_SERVER_PORT_NUMBER() {
-        return TFTP_SERVER_PORT_NUMBER;
-    }
-
-    public void setTFTP_SERVER_PORT_NUMBER(int TFTP_SERVER_PORT_NUMBER) {
-        this.TFTP_SERVER_PORT_NUMBER = TFTP_SERVER_PORT_NUMBER;
-    }
-
-        
 }
