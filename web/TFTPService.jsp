@@ -147,13 +147,13 @@
                         <div class="card">
                             <div class="header">
                                 <h3><center> What do you want to do ?</center></h3>
-                                <div id="choice" style="margin-left: 760px;margin-top: 15px">
-                                <input type="radio" id="radioDownload" name="typeTFTP" value="Download"  >
-                                <label for="radioDownload">Download</label>
+                                <div id="choice" style="margin-left: 655px;margin-top: 15px">
+                                    <input type="radio" id="radioDownload" name="typeTFTP" value="Download"  >
+                                    <label for="radioDownload">Download</label>
 
 
-                                <input type="radio" id="radioUpload"  name="typeTFTP" value="Upload" >
-                                <label for="radioUpload">Upload</label>
+                                    <input type="radio" id="radioUpload"  name="typeTFTP" value="Upload" >
+                                    <label for="radioUpload">Upload</label>
                                 </div>
                             </div>
 
@@ -218,7 +218,7 @@
                                             <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="text" name="hostnameForUpload" value="${sessionScope.hostname}" class="form-control" placeholder="Your IP Server" required="required" >
+                                                        <input type="text" name="hostnameForUpload" value="${sessionScope.hostname}" class="form-control" placeholder="Your IP Server For Upload" required="required" >
                                                     </div>
                                                 </div>
                                             </div>

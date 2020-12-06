@@ -62,13 +62,13 @@ public class TFTPService {
     }
     
     
-    public static void send (final int transferMode, final String hostname, final String localFilename,
+public static void send (final int transferMode, final String hostname, final String localFilename,
             final String remoteFilename) throws FileNotFoundException, SocketException, IOException{
        
        
        FileInputStream input = new FileInputStream(new File(localFilename));
        TFTPClient tftp = new TFTPClient();
-        tftp.setDefaultTimeout(600);
+        tftp.setDefaultTimeout(6000);
        tftp.open();
        tftp.sendFile(remoteFilename, transferMode, input, hostname);
        tftp.close();

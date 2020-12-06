@@ -76,9 +76,10 @@ public class upoadTFTPServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response, String filePath, String fileNameForGet, String hostName)
             throws ServletException, IOException {
-        
-        System.out.println(filePath);
-        System.out.println(fileNameForGet);
+              System.out.println("Host name In GET  Controller : \t" + hostName);
+            System.out.println("File Path In Net Bean ProJect In GET  Controller : \t" + filePath);
+          
+               System.out.println("File Name  In GET Controller: \t" + fileNameForGet);
 
         try {
              send(TFTP.BINARY_MODE, hostName, filePath, fileNameForGet);
@@ -121,7 +122,8 @@ public class upoadTFTPServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
        // checks if the request actually contains upload file
-        String hostname = (String) request.getParameter("hostnameForUpload");
+        String hostname = (String) request.getAttribute("hostnameForUpload");
+        request.getSession().setAttribute("hostnameForUpload", hostname);
         String filePath="";
                 String fileNameForGet = null ;
 		if (!ServletFileUpload.isMultipartContent(request)) {
@@ -170,10 +172,10 @@ public class upoadTFTPServlet extends HttpServlet {
 					if (!item.isFormField()) {
                                                 String fileName = new File(item.getName()).getName();
                                                 fileNameForGet = fileName;
-                                                System.out.println("File Name In Netbeans \t" + fileName);
+                                               // System.out.println("File Name In Netbeans \t" + fileName);
 						 filePath = uploadPath + File.separator + fileName;
 						File storeFile = new File(filePath);
-                                                System.out.println("File Path In Netbeans :\t" + filePath);
+                                               // System.out.println("File Path In Netbeans :\t" + filePath);
 						// saves the file on disk
 						item.write(storeFile);
 						request.setAttribute("message",
@@ -188,8 +190,10 @@ public class upoadTFTPServlet extends HttpServlet {
 		// redirects client to message page
 //		getServletContext().getRequestDispatcher("/message.jsp").forward(
 //				request, response);
-               
-        
+
+               System.out.println("File Path In Net Bean ProJect In Post Controller :" + filePath);
+               System.out.println("Host name for \t :" + hostname + "\t" + hostname);
+               System.out.println("File Name  In Post Controller:" + fileNameForGet);
                 doGet(request, response,filePath,fileNameForGet, hostname);
     }
 
