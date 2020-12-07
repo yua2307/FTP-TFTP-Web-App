@@ -86,36 +86,40 @@ public class downloadServlet extends HttpServlet {
           
          if (folderName == null) {
             request.getSession().setAttribute("message", "File Download Path Not Correct");
-           request.getRequestDispatcher("listFileServlet").forward(request, response);
+            response.sendRedirect("listFileServlet");
+         //  request.getRequestDispatcher("listFileServlet").forward(request, response);
         } else {
             request.getSession().setAttribute("message", "File Download Path Not Correct");
             request.setAttribute("folderName", folderName);
             //request.getRequestDispatcher("listFolderServlet").forward(request, response);
-            request.getRequestDispatcher("listFolderServlet").forward(request, response);
+         //   request.getRequestDispatcher("listFolderServlet").forward(request, response);
+         response.sendRedirect("listFolderServlet");
         }
         }
 
     if(check  ==true){
             if (folderName == null) {
-            request.setAttribute("message", "Download Sucessfully");
-            request.getRequestDispatcher("listFileServlet").forward(request, response);
+            request.getSession().setAttribute("message", "Download Sucessfully");
+              response.sendRedirect("listFileServlet");
+          //  request.getRequestDispatcher("listFileServlet").forward(request, response);
         } else {
             request.getSession().setAttribute("message", "Download Sucessfully");
             request.setAttribute("folderName", folderName);
             //request.getRequestDispatcher("listFolderServlet").forward(request, response);
-              request.getRequestDispatcher("listFolderServlet").forward(request, response);
+                response.sendRedirect("listFolderServlet");
         }
 
     }
         } catch (NullPointerException ex) {
              if (folderName == null) {
             request.getSession().setAttribute("message", "File Download Path Not Correct");
-           request.getRequestDispatcher("listFileServlet").forward(request, response);
+          response.sendRedirect("listFileServlet");
         } else {
             request.getSession().setAttribute("message", "File Download Path Not Correct");
             request.setAttribute("folderName", folderName);
             //request.getRequestDispatcher("listFolderServlet").forward(request, response);
-            request.getRequestDispatcher("listFolderServlet").forward(request, response);
+              response.sendRedirect("listFolderServlet");
+            //request.getRequestDispatcher("listFolderServlet").forward(request, response);
         }
             
         }

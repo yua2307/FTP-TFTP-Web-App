@@ -210,7 +210,7 @@
                                                      <td>
                                                          <c:set var="pathFolder" value="${folderName}/${file.getName()}"/>
                                                          <a href="listFolderServlet?folderName=${pathFolder}"><button><i class="material-icons">folder_open</i></button></a>
-                                                         <a href="deleteFolderServlet?folderName=${folderName}&fileName=${file.getName()}"><button>Delete Folder</button></a>  
+                                                     
                                                      </td>
                                                 </tr>
                                             </c:when>

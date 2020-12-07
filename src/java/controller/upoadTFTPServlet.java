@@ -122,7 +122,7 @@ public class upoadTFTPServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
        // checks if the request actually contains upload file
-        String hostname = (String) request.getAttribute("hostnameForUpload");
+        String hostname = (String) request.getSession().getAttribute("hostname");
         request.getSession().setAttribute("hostnameForUpload", hostname);
         String filePath="";
                 String fileNameForGet = null ;

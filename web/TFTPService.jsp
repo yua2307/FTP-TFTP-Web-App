@@ -89,36 +89,11 @@
                     <ul class="list">
                         <li class="header">MENU</li>
                         <li>
-                            <a href="listFileServlet">
+                            <a href="index.jsp">
                                 <span>Home</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="javascript:void(0);" class="menu-toggle">
-                                <span>TFTP Manager</span>
-                            </a>
-                            <ul class="ml-menu">
-                                <li>
-                                    <a href="#">TTFTP Manager</a>
-                                </li>
-                                <li>
-                                    <a href="#">TTFTP Manager</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" class="menu-toggle">
-                                <span>TFTP Manager</span>
-                            </a>
-                            <ul class="ml-menu">
-                                <li>
-                                    <a href="#">TFTP Manager</a>
-                                </li>
-                                <li>
-                                    <a href="#">TFTP Manager</a>
-                                </li>
-                            </ul>
-                        </li>
+                       
                     </ul>
                 </div>
                 <!--             #Menu 

@@ -44,6 +44,10 @@
         <servlet-name>upoadTFTPServlet</servlet-name>
         <servlet-class>controller.upoadTFTPServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>redirectServerlet</servlet-name>
+        <servlet-class>controller.redirectServerlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>loginServlet</servlet-name>
         <url-pattern>/loginServlet</url-pattern>
@@ -87,6 +91,10 @@
     <servlet-mapping>
         <servlet-name>upoadTFTPServlet</servlet-name>
         <url-pattern>/upoadTFTPServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>redirectServerlet</servlet-name>
+        <url-pattern>/redirectServerlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

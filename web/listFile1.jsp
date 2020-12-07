@@ -195,7 +195,7 @@
                                                     <td></td>
                                                     <td>
                                                         <a href="listFolderServlet?folderName=${file.getName()}"><button><i class="material-icons">folder_open</i></button></a>
-                                                        <a href="deleteFolderServlet?folderName=null&fileName=${file.getName()}"><button>Delete Folder</button></a>
+                                                     
                                                     </td>
                                                 </tr>
                                             </c:when>
@@ -210,7 +210,7 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        Download <b> ${file.getName()} <b>
+                                        Download  <b> ${file.getName()} <b>
                                                 </div>
                                                 <form action="downloadServlet" method="POST" >
                                                     <div class="modal-body">

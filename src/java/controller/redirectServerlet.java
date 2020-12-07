@@ -5,7 +5,6 @@
  */
 package controller;
 
-import ftp.FTPService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -17,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author macbookpro
  */
-public class disconnectServlet extends HttpServlet {
+public class redirectServerlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +34,10 @@ public class disconnectServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet disconnectServlet</title>");            
+            out.println("<title>Servlet redirectServerlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet disconnectServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet redirectServerlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -56,10 +55,7 @@ public class disconnectServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        FTPService.disconnectFTPServer();
-        request.getSession().removeAttribute("message");
-        response.sendRedirect("index.jsp");
+        processRequest(request, response);
     }
 
     /**
@@ -73,7 +69,14 @@ public class disconnectServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String choice = (String) request.getParameter("type");
+        System.out.println(choice);
+        if(choice.equalsIgnoreCase("TFTP")){
+                response.sendRedirect("TFTPService.jsp");
+            }
+        else {
+            response.sendRedirect("login.jsp");
+        }
     }
 
     /**
