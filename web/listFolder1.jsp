@@ -191,7 +191,7 @@
                                                 <tr>
                                                     <td>  <img style="width: 50px;height: 40px" src="<c:url value="/resources/images/file.png"/>"/></td>
                                                     <td>${file.getName()}</td>
-                                                    <td>${file.getSize()}</td>
+                                                    <td><fmt:formatNumber type="number" maxIntegerDigits="2" value="${file.getSize()/1000000}"/> MB</td>
                                                     <td></td>
                                                     <td>   
                                                         <button type="button"style="font-size:24px" data-toggle="modal" data-target="#${file.getName()}"><i class="fa fa-download"></i></button>

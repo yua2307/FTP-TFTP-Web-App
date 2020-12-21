@@ -192,7 +192,7 @@ public class upoadTFTPServlet extends HttpServlet {
 //				request, response);
 
                System.out.println("File Path In Net Bean ProJect In Post Controller :" + filePath);
-               System.out.println("Host name for \t :" + hostname + "\t" + hostname);
+               System.out.println("Host name for \t :" + hostname);
                System.out.println("File Name  In Post Controller:" + fileNameForGet);
                 doGet(request, response,filePath,fileNameForGet, hostname);
     }

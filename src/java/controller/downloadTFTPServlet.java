@@ -108,9 +108,11 @@ public class downloadTFTPServlet extends HttpServlet {
               request.getRequestDispatcher("TFTPService.jsp").forward(request, response);
             }
               
+        } catch(Exception e){
+                System.out.println(e.getMessage());
+              request.getRequestDispatcher("403.jsp").forward(request, response);
         }
-         
-         
+
             request.setAttribute("messageError", "Download Successfully");
             request.getRequestDispatcher("TFTPService.jsp").forward(request, response);
 
