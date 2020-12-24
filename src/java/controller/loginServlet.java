@@ -8,6 +8,7 @@ package controller;
 import ftp.FTPService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -77,9 +78,15 @@ public class loginServlet extends HttpServlet {
         String host = request.getParameter("host");
         int port = Integer.valueOf(request.getParameter("port"));
         
-        FTPService fTPService = new FTPService(host, port, username, password);
+         FTPService fTPService = new FTPService(host, port, username, password);
         
            int check = fTPService.getConnectionServer();
+           ArrayList<String> reply = new ArrayList<String>();
+           fTPService.showServerReply2(fTPService.getFtpClient(),reply);
+            for (String string : reply) {
+                System.out.println("Reply in Controller :" + string);
+            }
+           request.getSession().setAttribute("replyServer", reply);
            if(check == 0 || check == -1){
                request.setAttribute("messageLogin","FTP server not respond!");
                request.getRequestDispatcher("login.jsp").forward(request, response);

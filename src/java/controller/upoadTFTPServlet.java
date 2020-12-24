@@ -37,17 +37,14 @@ public class upoadTFTPServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    
-    
     // location to store file uploaded
-	private static final String UPLOAD_DIRECTORY = "uploadTempForTFTP";
+    private static final String UPLOAD_DIRECTORY = "uploadTempForTFTP";
 
-	// upload settings
-	private static final int MEMORY_THRESHOLD 	= 1024 * 1024 * 3; 	// 3MB
-	private static final int MAX_FILE_SIZE 		= 1024 * 1024 * 1024; // 1GB
-	private static final int MAX_REQUEST_SIZE	= 1024 * 1024 * 1024; // 1GB
-        
-        
+    // upload settings
+    private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3; 	// 3MB
+    private static final int MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1GB
+    private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 1024; // 1GB
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -56,7 +53,7 @@ public class upoadTFTPServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet upoadTFTPServlet</title>");            
+            out.println("<title>Servlet upoadTFTPServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet upoadTFTPServlet at " + request.getContextPath() + "</h1>");
@@ -76,17 +73,17 @@ public class upoadTFTPServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response, String filePath, String fileNameForGet, String hostName)
             throws ServletException, IOException {
-              System.out.println("Host name In GET  Controller : \t" + hostName);
-            System.out.println("File Path In Net Bean ProJect In GET  Controller : \t" + filePath);
-          
-               System.out.println("File Name  In GET Controller: \t" + fileNameForGet);
+        System.out.println("Host name In GET  Controller : \t" + hostName);
+        System.out.println("File Path In Net Bean ProJect In GET  Controller : \t" + filePath);
+
+        System.out.println("File Name  In GET Controller: \t" + fileNameForGet);
 
         try {
-             send(TFTP.BINARY_MODE, hostName, filePath, fileNameForGet);
-        } catch(UnknownHostException e) {    
+            send(TFTP.BINARY_MODE, hostName, filePath, fileNameForGet);
+        } catch (UnknownHostException e) {
             request.setAttribute("messageError", "Wrong host name");
             request.getRequestDispatcher("TFTPService.jsp").forward(request, response);
-        } 
+        }
 //         
 //        catch (IOException e){
 //            
@@ -99,12 +96,10 @@ public class upoadTFTPServlet extends HttpServlet {
 //            }
 //              
 //        }
-         
-         
-            request.setAttribute("messageError", "Upload Successfully");
-            request.getRequestDispatcher("TFTPService.jsp").forward(request, response);
- 
-     
+
+        request.setAttribute("messageError", "Upload Successfully");
+        request.getRequestDispatcher("TFTPService.jsp").forward(request, response);
+
     }
 
     /**
@@ -118,83 +113,83 @@ public class upoadTFTPServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-       // checks if the request actually contains upload file
+        // checks if the request actually contains upload file
         String hostname = (String) request.getSession().getAttribute("hostname");
         request.getSession().setAttribute("hostnameForUpload", hostname);
-        String filePath="";
-                String fileNameForGet = null ;
-		if (!ServletFileUpload.isMultipartContent(request)) {
-			// if not, we stop here
-			PrintWriter writer = response.getWriter();
-			writer.println("Error: Form must has enctype=multipart/form-data.");
-			writer.flush();
-			return;
-		}
+        String filePath = "";
+        String fileNameForGet = null;
+        if (!ServletFileUpload.isMultipartContent(request)) {
+            // if not, we stop here
+            PrintWriter writer = response.getWriter();
+            writer.println("Error: Form must has enctype=multipart/form-data.");
+            writer.flush();
+            return;
+        }
 
-		// configures upload settings
-		DiskFileItemFactory factory = new DiskFileItemFactory();
-		// sets memory threshold - beyond which files are stored in disk 
-		factory.setSizeThreshold(MEMORY_THRESHOLD);
-		// sets temporary location to store files
-		factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
+        // configures upload settings
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        // sets memory threshold - beyond which files are stored in disk 
+        factory.setSizeThreshold(MEMORY_THRESHOLD);
+        // sets temporary location to store files
+        factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
 
-		ServletFileUpload upload = new ServletFileUpload(factory);
-		
-		// sets maximum size of upload file
-		upload.setFileSizeMax(MAX_FILE_SIZE);
-		
-		// sets maximum size of request (include file + form data)
-		upload.setSizeMax(MAX_REQUEST_SIZE);
+        ServletFileUpload upload = new ServletFileUpload(factory);
 
-		// constructs the directory path to store upload file
-		// this path is relative to application's directory
-		String uploadPath = getServletContext().getRealPath("")
-				 + UPLOAD_DIRECTORY;
-		
-		// creates the directory if it does not exist
-		File uploadDir = new File(uploadPath);
-		if (!uploadDir.exists()) {
-			uploadDir.mkdir();
-		}
+        // sets maximum size of upload file
+        upload.setFileSizeMax(MAX_FILE_SIZE);
 
-		try {
-			// parses the request's content to extract file data
-			@SuppressWarnings("unchecked")
-			List<FileItem> formItems = upload.parseRequest(request);
+        // sets maximum size of request (include file + form data)
+        upload.setSizeMax(MAX_REQUEST_SIZE);
 
-			if (formItems != null && formItems.size() > 0) {
-				// iterates over form's fields
-				for (FileItem item : formItems) {
-					// processes only fields that are not form fields
-					if (!item.isFormField()) {
-                                                String fileName = new File(item.getName()).getName();
-                                                fileNameForGet = fileName;
-                                               // System.out.println("File Name In Netbeans \t" + fileName);
-						 filePath = uploadPath + File.separator + fileName;
-						File storeFile = new File(filePath);
-                                               // System.out.println("File Path In Netbeans :\t" + filePath);
-						// saves the file on disk
-						item.write(storeFile);
-						request.setAttribute("message",
-							"Upload has been done successfully!");
-					}
-				}
-			}
-		} catch (Exception ex) {
-			request.setAttribute("message",
-					"There was an error: " + ex.getMessage());
-		}
-		// redirects client to message page
+        // constructs the directory path to store upload file
+        // this path is relative to application's directory
+        String uploadPath = getServletContext().getRealPath("")
+                + UPLOAD_DIRECTORY;
+
+        // creates the directory if it does not exist
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
+
+        try {
+            // parses the request's content to extract file data
+            @SuppressWarnings("unchecked")
+            List<FileItem> formItems = upload.parseRequest(request);
+
+            if (formItems != null && formItems.size() > 0) {
+                // iterates over form's fields
+                for (FileItem item : formItems) {
+                    // processes only fields that are not form fields
+                    if (!item.isFormField()) {
+                        String fileName = new File(item.getName()).getName();
+                        fileNameForGet = fileName;
+                        // System.out.println("File Name In Netbeans \t" + fileName);
+                        filePath = uploadPath + File.separator + fileName;
+                        File storeFile = new File(filePath);
+                        // System.out.println("File Path In Netbeans :\t" + filePath);
+                        // saves the file on disk
+                        item.write(storeFile);
+                        request.setAttribute("message",
+                                "Upload has been done successfully!");
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            request.setAttribute("message",
+                    "There was an error: " + ex.getMessage());
+        }
+        // redirects client to message page
 //		getServletContext().getRequestDispatcher("/message.jsp").forward(
 //				request, response);
 
-               System.out.println("File Path In Net Bean ProJect In Post Controller :" + filePath);
-               System.out.println("Host name for \t :" + hostname);
-               System.out.println("File Name  In Post Controller:" + fileNameForGet);
-                doGet(request, response,filePath,fileNameForGet, hostname);
+        System.out.println("File Path In Net Bean ProJect In Post Controller :" + filePath);
+        System.out.println("Host name for \t :" + hostname);
+        System.out.println("File Name  In Post Controller:" + fileNameForGet);
+        doGet(request, response, filePath, fileNameForGet, hostname);
     }
 
     /**

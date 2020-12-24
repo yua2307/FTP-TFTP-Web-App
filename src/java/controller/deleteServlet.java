@@ -8,6 +8,7 @@ package controller;
 import ftp.FTPService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +60,11 @@ public class deleteServlet extends HttpServlet {
         String filePath = request.getParameter("fileName");
         boolean check = FTPService.deleteFile(filePath);
         String folderPath = (String) request.getSession().getAttribute("folderNameUpload");
-
+             ArrayList<String> replyServer = (ArrayList<String>) request.getSession().getAttribute("replyServer");
+                
+                FTPService.showServerReply2(FTPService.getFtpClientGlobal(), replyServer);
+              
+         request.getSession().setAttribute("replyServer", replyServer);
         if (check) {
             
               request.getSession().setAttribute("message", "Delete Sucessfully");
@@ -68,7 +73,9 @@ public class deleteServlet extends HttpServlet {
                 //   request.getRequestDispatcher("listFileServlet").forward(request, response);
                 response.sendRedirect("listFileServlet");
             } else {
-                request.setAttribute("folderName", folderPath);
+                
+                   request.getSession().setAttribute("folderNameUpload", folderPath);
+              //  request.setAttribute("folderName", folderPath);
                 //request.getRequestDispatcher("listFolderServlet").forward(request, response);
                 response.sendRedirect("listFolderServlet");
             }

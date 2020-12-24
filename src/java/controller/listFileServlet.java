@@ -8,6 +8,7 @@ package controller;
 import ftp.FTPService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -59,13 +60,24 @@ public class listFileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getSession().removeAttribute("folderNameUpload");
+        try {
+            request.getSession().removeAttribute("folderNameUpload");
         
         List<FTPFile> listFile =  FTPService.getListFileFromFTPServer();
+        
+         ArrayList<String> replyServer = (ArrayList<String>) request.getSession().getAttribute("replyServer");
+                
+                FTPService.showServerReply2(FTPService.getFtpClientGlobal(), replyServer);
+              
+         request.getSession().setAttribute("replyServer", replyServer);
        // List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/download");
         request.setAttribute("listFile", listFile);
         request.getRequestDispatcher("listFile1.jsp").forward(request, response);
          request.getSession().removeAttribute("message");
+        } catch (Exception e) {
+           //   String folderNameUpload = (String) request.getSession().getAttribute("folderNameUpload"); 
+             response.sendRedirect("listFileServlet");
+        }
     }
 
     /**

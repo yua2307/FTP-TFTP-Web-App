@@ -150,7 +150,7 @@
                                         </div>
                                         <div class="row clearfix">
                                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                                                <label for=""></label>
+                                                <label for=""> File Name You Want Download</label>
                                             </div>
                                             <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                                                 <div class="form-group">
@@ -162,7 +162,7 @@
                                         </div>
                                         <div class="row clearfix">
                                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                                                <label for=""></label>
+                                                <label for="">Download Path</label>
                                             </div>
                                             <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                                                 <div class="form-group">
@@ -175,7 +175,7 @@
                                         <div class="row clearfix">
                                             <div style="padding-left: 45%"class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                                                 <button type="submit" class="btn btn-success m-t-15 w-90 waves-effect">Download</button>
-                                                <button type="reset" class="btn btn-warning m-t-15 w-90 waves-effect">Cancel</button>
+                                              
                                             </div>
                                         </div>
 
@@ -213,7 +213,7 @@
                                         <div class="row clearfix">
                                             <div style="padding-left: 45%"class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                                                 <button type="submit" class="btn btn-success m-t-15 w-90 waves-effect">Upload</button>
-                                                <button type="reset" class="btn btn-warning m-t-15 w-90 waves-effect">Cancel</button>
+                                              
                                             </div>
                                         </div>
                                     </form>  

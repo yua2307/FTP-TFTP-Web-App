@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>  
@@ -87,49 +88,25 @@
 <!--             Menu -->
             <div class="menu">
                 <ul class="list">
-                    <li class="header">MENU</li>
+                   
                     <li>
                         <a href="listFileServlet">
-                            <span>Home</span>
+                            <span>Server Reply</span>
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <span>FTP Manager</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="#">FTP Manager</a>
-                            </li>
-                            <li>
-                                <a href="#">FTP Manager</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <span>FTP Manager</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="#">FTP Manager</a>
-                            </li>
-                            <li>
-                                <a href="#">FTP Manager</a>
-                            </li>
-                        </ul>
+                      <%
+                            ArrayList<String> replyServer =(ArrayList<String>) request.getSession().getAttribute("replyServer");
+                           for(int i = replyServer.size()-1;i>=0;i--){
+                        %>
+                        
+                        <p style="margin-left:10px"><%=replyServer.get(i).toString()%></p>
+                        <%
+                            }
+                        %>              
                     </li>
                 </ul>
-            </div>
-<!--             #Menu 
-             Footer -->
-            <div class="legal">
-                <div class="copyright">
-                    &copy; 2018 <a href="javascript:void(0);">abc123</a>.
-                </div>
-                <div class="version">
-                    <b>Version: </b> 1.0.0
-                </div>
+               
             </div>
 <!--             #Footer -->
         </aside>
@@ -179,7 +156,7 @@
                                                     <td>  <img style="width: 50px;height: 40px" src="<c:url value="/resources/images/file.png"/>"/></td>
                                                     <td>${file.getName()}</td>
                                                     <td><fmt:formatNumber type="number" maxIntegerDigits="2" value="${file.getSize()/1000000}"/> MB</td>
-                                                    <td></td>
+                                                    <td><fmt:formatDate type = "both" dateStyle = "medium" timeStyle = "medium" value = "${file.getTimestamp().getTime()}"  /></td>
                                                     <td>  
                                                         <button type="button"style="font-size:24px" data-toggle="modal" data-target="#${file.getName()}"><i class="fa fa-download"></i></button>
                                                         <c:set var="pathFolder" value="${folderName}/${file.getName()}"/>
@@ -195,7 +172,6 @@
                                                     <td></td>
                                                     <td>
                                                         <a href="listFolderServlet?folderName=${file.getName()}"><button><i class="material-icons">folder_open</i></button></a>
-                                                     
                                                     </td>
                                                 </tr>
                                             </c:when>
@@ -231,6 +207,10 @@
                                         </c:choose>
                             </c:forEach>
             <h1 style="display:none" id="messagesError">${sessionScope.message}</h1>
+        
+          
+            
+            
                         </div>
                     </div>
                 </div>
@@ -266,8 +246,9 @@
                    var check3 = avai.localeCompare("Sorry. You don't have permission to upload at here ");
                    var check4 = avai.localeCompare("Delete Sucessfully");
                    var check5 = avai.localeCompare("File Download Path Not Correct");
-             
-                   if (check1==0 || check2==0|| check3 == 0 || check4 == 0 || check5 == 0) alert(avai); 
+                   var check6 = avai.localeCompare("File Already Existed");
+                   var check7 = avai.localeCompare("File Already Existed In Server");
+                   if (check1==0 || check2==0|| check3 == 0 || check4 == 0 || check5 == 0 || check6 == 0 || check7 == 0) alert(avai); 
                         //alert("${message}");
                }
         </script>

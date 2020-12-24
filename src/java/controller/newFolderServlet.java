@@ -8,6 +8,7 @@ package controller;
 import ftp.FTPService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +36,7 @@ public class newFolderServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet newFolderServlet</title>");            
+            out.println("<title>Servlet newFolderServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet newFolderServlet at " + request.getContextPath() + "</h1>");
@@ -56,7 +57,7 @@ public class newFolderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-      
+
 //        System.out.println(folderName);
 //       long numOfSplash = folderName.chars().filter(ch -> ch == '/').count();
 //       if(numOfSplash < 1){
@@ -80,20 +81,23 @@ public class newFolderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       String folderName = request.getParameter("folderName");
+        String folderName = request.getParameter("folderName");
         System.out.println(folderName);
-       String newFolderName = request.getParameter("newFolderName");
+        String newFolderName = request.getParameter("newFolderName");
         System.out.println(newFolderName);
-       if(folderName == null){
-            FTPService.makeNewFolder(newFolderName);
-                 request.getRequestDispatcher("listFileServlet").forward(request, response);
-       }
-       else {
-            FTPService.makeNewFolder(folderName+"/"+newFolderName);
-            request.setAttribute("folderName",folderName);
+         ArrayList<String> replyServer = (ArrayList<String>) request.getSession().getAttribute("replyServer");
+        if (folderName == null) {
+               FTPService.makeNewFolder(newFolderName);
+             
+               FTPService.showServerReply2(FTPService.getFtpClientGlobal(), replyServer);
+            request.getRequestDispatcher("listFileServlet").forward(request, response);
+        } else {
+              FTPService.makeNewFolder(folderName + "/" + newFolderName);
+               FTPService.showServerReply2(FTPService.getFtpClientGlobal(), replyServer);
+            request.setAttribute("folderName", folderName);
             request.getRequestDispatcher("listFolderServlet").forward(request, response);
-       }
-      
+        }
+        request.getSession().setAttribute("replyServer", replyServer);
     }
 
     /**

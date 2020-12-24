@@ -8,6 +8,7 @@ package controller;
 import ftp.FTPService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -59,13 +60,18 @@ public class listFolderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        String folderName=(String) request.getParameter("folderName");
+        try {
+              String folderName=(String) request.getParameter("folderName");
         String folderNameUpload = (String) request.getSession().getAttribute("folderNameUpload"); 
         HttpSession session = request.getSession();
+         ArrayList<String> replyServer = (ArrayList<String>) request.getSession().getAttribute("replyServer");
+                
+            
+             
         System.out.println(folderNameUpload);
         if(folderNameUpload !=null && folderName == null){
               List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/"+folderNameUpload);
+               FTPService.showServerReply2(FTPService.getFtpClientGlobal(), replyServer);
                 // List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/download");
                  request.setAttribute("listFile", listFile);
                 request.setAttribute("folderName", folderNameUpload); // 'Download'
@@ -77,10 +83,10 @@ public class listFolderServlet extends HttpServlet {
             session.removeAttribute("folderNameUpload");
           //  request.getRequestDispatcher("listFileServlet").forward(request, response);
             response.sendRedirect("listFileServlet");
-             
         }
         else {
          List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/"+folderName);
+          FTPService.showServerReply2(FTPService.getFtpClientGlobal(), replyServer);
        // List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/download");
         request.setAttribute("listFile", listFile);
         request.setAttribute("folderName", folderName); // 'Download'
@@ -88,6 +94,14 @@ public class listFolderServlet extends HttpServlet {
         request.getRequestDispatcher("listFolder1.jsp").forward(request, response);
          request.getSession().removeAttribute("message");
         }
+             request.getSession().setAttribute("replyServer", replyServer);
+            
+        } catch (Exception e) {
+            
+             String folderNameUpload = (String) request.getSession().getAttribute("folderNameUpload"); 
+             response.sendRedirect("listFolderServlet");
+        }
+      
     }
 
     /**

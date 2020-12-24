@@ -34,7 +34,7 @@ public class redirectServerlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet redirectServerlet</title>");            
+            out.println("<title>Servlet redirectServerlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet redirectServerlet at " + request.getContextPath() + "</h1>");
@@ -71,10 +71,9 @@ public class redirectServerlet extends HttpServlet {
             throws ServletException, IOException {
         String choice = (String) request.getParameter("type");
         System.out.println(choice);
-        if(choice.equalsIgnoreCase("TFTP")){
-                response.sendRedirect("TFTPService.jsp");
-            }
-        else {
+        if (choice.equalsIgnoreCase("TFTP")) {
+            response.sendRedirect("TFTPService.jsp");
+        } else {
             response.sendRedirect("login.jsp");
         }
     }
