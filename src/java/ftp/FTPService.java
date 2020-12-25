@@ -124,6 +124,7 @@ public class FTPService {
                 System.out.println(localFileFullName);
 
                 ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+                showServerReply(ftpClient);
                 System.out.println("FileUpload in netbeans " + localFileFullName);
                 File secondLocalFile = new File(localFileFullName);
                 FileInputStream inputStream = new FileInputStream(secondLocalFile);
@@ -320,13 +321,16 @@ public class FTPService {
             File downloadFile = new File(downloadFilePath); // Example in client : /Users/macbookpro/Desktop/testLTM + ten File 
             OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadFile)); // Example in server : /download + ten File 
             // download file from FTP Server
-            ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
-            ftpClient.setBufferSize(BUFFER_SIZE);
+              showServerReply(ftpClient);
 
+            ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
+              showServerReply(ftpClient);
+            ftpClient.setBufferSize(BUFFER_SIZE);
+             showServerReply(ftpClient);
             boolean success = ftpClient.retrieveFile(filePath, outputStream);
             showServerReply(ftpClient);
             outputStream.close();
-
+            showServerReply(ftpClient);
             return success;
         }
 
@@ -339,11 +343,12 @@ public class FTPService {
         //   getConnectionServer();
         try {
             FTPFile[] ftpFiles = ftpClient.listFiles();
+             showServerReply(ftpClient);
             // System.out.println("Dri" + " has " + ftpFiles.length + "  file(s)");
             if (ftpFiles.length > 0) {
                 for (FTPFile ftpFile : ftpFiles) {
                     listFiles.add(ftpFile);
-                  
+                      showServerReply(ftpClient);
                 }
             }
         } catch (IOException ex) {
@@ -358,7 +363,6 @@ public class FTPService {
             boolean check = ftpClient.makeDirectory(newFolderName);
             showServerReply(ftpClient);
             return check;
-        
 
     }
 
@@ -417,13 +421,19 @@ public class FTPService {
             System.out.println("connecting ftp server...");
             // connect to ftp server
             ftpClient.setDefaultTimeout(FTP_TIMEOUT);
+             showServerReply(ftpClient);
             ftpClient.connect(FTP_SERVER_ADDRESS, FTP_SERVER_PORT_NUMBER);
-
+            System.out.print("server");
+            showServerReply(ftpClient);
             // run the passive mode command
             ftpClient.enterLocalPassiveMode();
+               showServerReply(ftpClient);
+            System.out.println(ftpClient.getLocalPort());
+            System.out.println(ftpClient.getPassivePort());
+              showServerReply(ftpClient);
             // check reply code
             if (!FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
-
+                 showServerReply(ftpClient);
                 //       disconnectFTPServer(ftpClient);
                 //  throw new IOException("FTP server not respond!");
                 return 0;
@@ -431,6 +441,7 @@ public class FTPService {
                 ftpClient.setSoTimeout(FTP_TIMEOUT);
                 // login ftp server
                 if (ftpClient.login(FTP_USERNAME, FTP_PASSWORD) == false) {
+                     showServerReply(ftpClient);
                     return 1;
                 } else {
                     showServerReply(ftpClient);
@@ -450,22 +461,27 @@ public class FTPService {
             System.out.println("connecting ftp server...");
             // connect to ftp server
             ftpClient.setDefaultTimeout(FTP_TIMEOUT);
-
+            showServerReply(ftpClient);
             ftpClient.connect(FTP_SERVER_ADDRESS, FTP_SERVER_PORT_NUMBER);
             showServerReply(ftpClient);
             // run the passive mode command
             ftpClient.enterLocalPassiveMode();
+             showServerReply(ftpClient);
             // check reply code
             if (!FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
+                 showServerReply(ftpClient);
                 //       disconnectFTPServer(ftpClient);
                 //  throw new IOException("FTP server not respond!");
                 return null;
             } else {
                 ftpClient.setSoTimeout(FTP_TIMEOUT);
+                 showServerReply(ftpClient);
                 // login ftp server
                 if (ftpClient.login(FTP_USERNAME, FTP_PASSWORD) == false) {
+                     showServerReply(ftpClient);
                     return null;
                 } else {
+                     showServerReply(ftpClient);
                     ftpClient.setDataTimeout(FTP_TIMEOUT);
                     return ftpClient;
                 }
@@ -483,6 +499,7 @@ public class FTPService {
             try {
                 ftpClient.logout();
                 ftpClient.disconnect();
+                showServerReply(ftpClient);
                 System.out.println("Disconnected to Server");
             } catch (IOException ex) {
                 ex.printStackTrace();

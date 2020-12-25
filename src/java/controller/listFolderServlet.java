@@ -65,7 +65,12 @@ public class listFolderServlet extends HttpServlet {
         String folderNameUpload = (String) request.getSession().getAttribute("folderNameUpload"); 
         HttpSession session = request.getSession();
          ArrayList<String> replyServer = (ArrayList<String>) request.getSession().getAttribute("replyServer");
-                
+         if(folderNameUpload == null || folderNameUpload.equals("")){
+              replyServer.add("257 /" +folderName+ " is the current directory");
+         }else {
+                 replyServer.add("257 /" +folderNameUpload+ " is the current directory");
+         }
+        
             
              
         System.out.println(folderNameUpload);
@@ -97,9 +102,9 @@ public class listFolderServlet extends HttpServlet {
              request.getSession().setAttribute("replyServer", replyServer);
             
         } catch (Exception e) {
-            
-             String folderNameUpload = (String) request.getSession().getAttribute("folderNameUpload"); 
-             response.sendRedirect("listFolderServlet");
+             response.sendRedirect("login.jsp");
+//             String folderNameUpload = (String) request.getSession().getAttribute("folderNameUpload"); 
+//             response.sendRedirect("listFolderServlet");
         }
       
     }

@@ -8,7 +8,9 @@ package controller;
 import ftp.FTPService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -82,6 +84,10 @@ public class loginServlet extends HttpServlet {
         
            int check = fTPService.getConnectionServer();
            ArrayList<String> reply = new ArrayList<String>();
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+            Date date = new Date();
+           reply.add("220 (vsFTPd 3.0.3) at" + formatter.format(date));
+       
            fTPService.showServerReply2(fTPService.getFtpClient(),reply);
             for (String string : reply) {
                 System.out.println("Reply in Controller :" + string);

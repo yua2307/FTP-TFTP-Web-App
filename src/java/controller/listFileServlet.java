@@ -23,8 +23,7 @@ import org.apache.commons.net.ftp.FTPFile;
 public class listFileServlet extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -39,7 +38,7 @@ public class listFileServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet listFileServlet</title>");            
+            out.println("<title>Servlet listFileServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet listFileServlet at " + request.getContextPath() + "</h1>");
@@ -62,21 +61,21 @@ public class listFileServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             request.getSession().removeAttribute("folderNameUpload");
-        
-        List<FTPFile> listFile =  FTPService.getListFileFromFTPServer();
-        
-         ArrayList<String> replyServer = (ArrayList<String>) request.getSession().getAttribute("replyServer");
-                
-                FTPService.showServerReply2(FTPService.getFtpClientGlobal(), replyServer);
-              
-         request.getSession().setAttribute("replyServer", replyServer);
-       // List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/download");
-        request.setAttribute("listFile", listFile);
-        request.getRequestDispatcher("listFile1.jsp").forward(request, response);
-         request.getSession().removeAttribute("message");
+
+            List<FTPFile> listFile = FTPService.getListFileFromFTPServer();
+
+            ArrayList<String> replyServer = (ArrayList<String>) request.getSession().getAttribute("replyServer");
+            replyServer.add("257 / is the current directory");
+            FTPService.showServerReply2(FTPService.getFtpClientGlobal(), replyServer);
+
+            request.getSession().setAttribute("replyServer", replyServer);
+            // List<FTPFile> listFile =  FTPService.getListFileFromFTPServer("/download");
+            request.setAttribute("listFile", listFile);
+            request.getRequestDispatcher("listFile1.jsp").forward(request, response);
+            request.getSession().removeAttribute("message");
         } catch (Exception e) {
-           //   String folderNameUpload = (String) request.getSession().getAttribute("folderNameUpload"); 
-             response.sendRedirect("listFileServlet");
+            //   String folderNameUpload = (String) request.getSession().getAttribute("folderNameUpload"); 
+            response.sendRedirect("login.jsp");
         }
     }
 
