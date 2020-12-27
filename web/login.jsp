@@ -149,7 +149,7 @@
 
                 <select name="choice">
                     <option value="1">Active Mode</option>
-                    <option value="2">Passive Mode</option>
+                    <option value="2" selected="selected">Passive Mode</option>
                 </select>
                 <button type="submit">Login</button>
 
