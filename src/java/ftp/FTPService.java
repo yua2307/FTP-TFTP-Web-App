@@ -57,8 +57,8 @@ public class FTPService {
     private static final int BUFFER_SIZE = 1024 * 1024 * 1;
 
     private static final String SLASH = "/";
-    private static FTPClient ftpClient = getConnectionServer2();
-
+   // private static FTPClient ftpClient = getConnectionServer2();
+    public static FTPClient ftpClient ;
     public static boolean checkFileExistsInServer(String filePath) throws IOException {
         System.out.println("file path to check :" + filePath);
         FTPFile[] remoteFiles = ftpClient.listFiles(filePath);
@@ -155,6 +155,7 @@ public class FTPService {
                 if (completed) {
                     //   System.out.println("The second file is uploaded successfully.");
                     showServerReply(ftpClient);
+                   // System.out.println(ftpClient.getStatus());
                     return 1;
                 }
             } catch (Exception ex) {
@@ -322,12 +323,13 @@ public class FTPService {
             OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadFile)); // Example in server : /download + ten File 
             // download file from FTP Server
               showServerReply(ftpClient);
-
+              
             ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
               showServerReply(ftpClient);
             ftpClient.setBufferSize(BUFFER_SIZE);
              showServerReply(ftpClient);
             boolean success = ftpClient.retrieveFile(filePath, outputStream);
+          //  System.out.println(ftpClient.getStatus());
             showServerReply(ftpClient);
             outputStream.close();
             showServerReply(ftpClient);
@@ -400,7 +402,6 @@ public class FTPService {
 
     public static void showServerReply2(FTPClient ftpClient, ArrayList<String> reply) {
         String[] listReply = ftpClient.getReplyStrings();
-
 //        if(reply.size() >=20){
 //           for(int i=0;i<10;i++){
 //               reply.remove(i);
@@ -415,7 +416,7 @@ public class FTPService {
         }
     }
 
-    public static int getConnectionServer() {
+    public static int getConnectionServer(int choice) {
         ftpClient = new FTPClient();
         try {
             System.out.println("connecting ftp server...");
@@ -426,10 +427,20 @@ public class FTPService {
             System.out.print("server");
             showServerReply(ftpClient);
             // run the passive mode command
-            ftpClient.enterLocalPassiveMode();
+            if(choice == 1){
+                   ftpClient.enterLocalActiveMode();
+                   FTPService.ftpClient = getConnectionServer2(1);
+            } else if(choice == 2){
+                 ftpClient.enterLocalPassiveMode();
+                   FTPService.ftpClient = getConnectionServer2(2);
+            }
                showServerReply(ftpClient);
-            System.out.println(ftpClient.getLocalPort());
-            System.out.println(ftpClient.getPassivePort());
+            System.out.println("Client Command Port :" + ftpClient.getLocalPort()+"/"+ftpClient.getLocalAddress());
+            System.out.println("Remote Port :" + ftpClient.getRemotePort());
+            System.out.println("Passive Port :" + ftpClient.getPassivePort());
+            System.out.println("Passive HOST :" + ftpClient.getPassiveHost());
+            System.out.println("Remote PORT :" + ftpClient.getRemotePort());
+            
               showServerReply(ftpClient);
             // check reply code
             if (!FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
@@ -446,6 +457,7 @@ public class FTPService {
                 } else {
                     showServerReply(ftpClient);
                     ftpClient.setDataTimeout(FTP_TIMEOUT);
+              //      System.out.println("Login Succesfully :" + ftpClient.getStatus());
                     return 2;
                 }
             }
@@ -455,7 +467,7 @@ public class FTPService {
         return -1;
     }
 
-    public static FTPClient getConnectionServer2() {
+    public static FTPClient getConnectionServer2(int choice) {
         ftpClient = new FTPClient();
         try {
             System.out.println("connecting ftp server...");
@@ -464,8 +476,15 @@ public class FTPService {
             showServerReply(ftpClient);
             ftpClient.connect(FTP_SERVER_ADDRESS, FTP_SERVER_PORT_NUMBER);
             showServerReply(ftpClient);
-            // run the passive mode command
-            ftpClient.enterLocalPassiveMode();
+             if(choice == 1){
+                 System.out.println("Mode Actice Connect");
+                   ftpClient.enterLocalActiveMode();
+                   //this.ftpClient = getConnectionServer2(1);
+            } else if(choice == 2){
+                  System.out.println("Mode Passive Connect");
+                 ftpClient.enterLocalPassiveMode();
+                 //  this.ftpClient = getConnectionServer2(2);
+            }
              showServerReply(ftpClient);
             // check reply code
             if (!FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {

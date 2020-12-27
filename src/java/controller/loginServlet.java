@@ -78,16 +78,23 @@ public class loginServlet extends HttpServlet {
             String username = request.getParameter("username");
         String password = request.getParameter("password");
         String host = request.getParameter("host");
+         int choice = Integer.valueOf(request.getParameter("choice"));
+        
         int port = Integer.valueOf(request.getParameter("port"));
         
          FTPService fTPService = new FTPService(host, port, username, password);
         
-           int check = fTPService.getConnectionServer();
+           int check = fTPService.getConnectionServer(choice);
            ArrayList<String> reply = new ArrayList<String>();
-            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+          
+           
+           SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
             Date date = new Date();
-           reply.add("220 (vsFTPd 3.0.3) at" + formatter.format(date));
-       
+           reply.add("220 (vsFTPd 3.0.3) at " + formatter.format(date));
+         //  ftpClient.getLocalPort()+"/"+ftpClient.getLocalAddress()
+           reply.add("Data Port : " +fTPService.getFtpClient().getLocalPort());
+           reply.add("IP Client : " +fTPService.getFtpClient().getLocalAddress());
+           
            fTPService.showServerReply2(fTPService.getFtpClient(),reply);
             for (String string : reply) {
                 System.out.println("Reply in Controller :" + string);
@@ -102,6 +109,12 @@ public class loginServlet extends HttpServlet {
                request.getRequestDispatcher("login.jsp").forward(request, response);
            }
            else if(check == 2){
+                if(choice == 1)
+               reply.add("Data connection - Active Mode ");
+                else if(choice == 2)
+                reply.add("Data connection - Passive Mode ");
+           
+           
              //  request.getRequestDispatcher("listFileServlet").forward(request, response);
                 response.sendRedirect("listFileServlet");
            }
